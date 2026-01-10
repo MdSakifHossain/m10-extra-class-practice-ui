@@ -1,5 +1,3 @@
-import React from "react";
-
 const Homepage = () => {
   return (
     <div className="container mx-auto flex-1 flex items-center justify-center">

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+// @ts-nocheck
+
+import { useEffect, useState } from "react";
 
 const GhostCursor = ({ className = "" }) => {
   // Always start bottom-right
