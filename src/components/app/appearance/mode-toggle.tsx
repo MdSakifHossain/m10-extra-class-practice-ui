@@ -4,7 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 
-export function ModeToggle() {
+export function ModeToggle({ className = "" }) {
   const { theme, setTheme } = useAppConfig();
 
   const toggle = () => setTheme(theme === "dark" ? "light" : "dark");
@@ -13,7 +13,7 @@ export function ModeToggle() {
     <Button
       variant="ghost"
       size="icon-lg"
-      className="rounded-full"
+      className={`rounded-full ${className}`}
       onClick={toggle}
       aria-label="Toggle theme"
     >

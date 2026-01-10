@@ -130,7 +130,7 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-1.5 lg:gap-4">
-        <ModeToggle />
+        <ModeToggle className="hidden sm:flex" />
 
         {user ? (
           <Popover>
