@@ -68,10 +68,10 @@ const Navbar = () => {
 
   return (
     <div
-      className="flex items-center justify-between px-5 py-2 lg:px-24 lg:py-4 border-b"
+      className="flex items-center justify-between px-5 py-3 lg:px-24 lg:py-4 border-b"
       id="navbar"
     >
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-2 lg:gap-4">
         <Sheet>
           <SheetTrigger>
             <TextAlignJustify />
@@ -122,9 +122,9 @@ const Navbar = () => {
 
         <Link
           to={"/"}
-          className="text-xl lg:text-4xl font-medium select-none italic flex items-center justify-center gap-3"
+          className="text-xl lg:text-4xl font-medium select-none italic flex items-center justify-center gap-1"
         >
-          <img src="/vite.svg" alt="icon" className="size-8 lg:size-14" />
+          <img src="/vite.svg" alt="icon" className="size-6 lg:size-12" />
           <p className="hidden sm:block">{site_title || "site_title"}</p>
         </Link>
       </div>
