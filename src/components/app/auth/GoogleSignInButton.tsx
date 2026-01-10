@@ -1,20 +1,24 @@
 // @ts-nocheck
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import { toast } from "sonner";
 import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
 import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 
 import { useAuth } from "@/contexts/authContext/AuthProvider";
 
-const GoogleSignInButton = () => {
+const GoogleSignInButton = ({ redirectTo = "" }) => {
   const navigate = useNavigate();
   const { signInWithGoogle } = useAuth();
 
   const handleGoogleLogin = async () => {
+    console.log("redirectTo: ", redirectTo);
+
     try {
       await signInWithGoogle();
-      navigate("/profile");
+      navigate(redirectTo || "/", { replace: true });
+      console.log("redirecting to: ", redirectTo);
+      console.log("redirection: successful");
       toast.custom(() => <SuccessSonner title="Login Successful" />);
     } catch (err) {
       console.error(err);

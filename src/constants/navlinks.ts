@@ -9,7 +9,7 @@ export const nav_links = [
     id: 2,
     text: "Services",
     link: "/services",
-    hidden: true,
+    hidden: false,
   },
   {
     id: 3,

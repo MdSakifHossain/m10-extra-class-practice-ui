@@ -21,7 +21,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
@@ -30,10 +30,13 @@ import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import GoogleSignInButton from "@/components/app/auth/GoogleSignInButton";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const { signInUser } = useAuth();
   const { site_title } = useAppConfig();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const goingTo = location.state || "/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -49,7 +52,7 @@ const LoginPage = () => {
       await signInUser(email, password);
 
       form.reset();
-      navigate("/profile");
+      navigate(goingTo, { replace: true });
       toast.custom(() => <SuccessSonner title="Login Successful" />);
     } catch (err) {
       console.error(err);
@@ -85,7 +88,7 @@ const LoginPage = () => {
                 <FieldGroup>
                   {/* Google Button */}
                   <Field>
-                    <GoogleSignInButton />
+                    <GoogleSignInButton redirectTo={location.state} />
                   </Field>
                   <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                     Or continue with
@@ -121,7 +124,7 @@ const LoginPage = () => {
                     </Button>
                     <FieldDescription className="text-center">
                       Don&apos;t have an account?{" "}
-                      <Link to={"/signup"}>
+                      <Link to={"/signup"} state={goingTo} replace>
                         <Button variant={"link"}>Sing Up</Button>
                       </Link>
                     </FieldDescription>

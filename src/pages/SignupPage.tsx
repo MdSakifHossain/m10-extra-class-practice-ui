@@ -16,7 +16,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
@@ -27,10 +27,11 @@ const SignupPage = () => {
   const { createUser, updateUserProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const goingTo = location.state || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.clear();
 
     const form = e.target;
     const data = new FormData(form);
@@ -52,7 +53,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("fullName: 👍");
 
     // email validation
     const EMAIL_REGEX =
@@ -69,7 +69,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("email: 👍");
 
     // password validation for eithr both of them are same or not
     if (formData.password !== formData.confirmPassword) {
@@ -81,7 +80,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("samePassword: 👍");
 
     // password validatin with min length
     const minPassLength = 6;
@@ -94,7 +92,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("minLength: 👍");
 
     // password validation for lowercase
     const regexLower = /^(?=.*[a-z]).+$/;
@@ -107,7 +104,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("regexLower: 👍");
 
     // password validation with uppercase
     const regexUpper = /^(?=.*[A-Z]).+$/;
@@ -120,7 +116,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("regexUpper: 👍");
 
     // passwrod validation with numaric
     const regexNum = /(?=.*\d)/;
@@ -133,7 +128,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("regexNum: 👍");
 
     // password validation with non alpha numaric
     const specialCharRegex = /^(?=.*[\^$*.\[\]{}()?"!@#%&/\\,><':;|_~]).+$/;
@@ -146,9 +140,6 @@ const SignupPage = () => {
       ));
       return;
     }
-    console.log("specialCharRegex: 👍");
-
-    console.log("\n------  All OK  ------\n\n");
 
     try {
       setIsSubmitting(true);
@@ -169,7 +160,7 @@ const SignupPage = () => {
         />
       ));
 
-      navigate("/profile");
+      navigate(goingTo, { replace: true });
     } catch (err) {
       console.log(err);
     } finally {
@@ -261,10 +252,10 @@ const SignupPage = () => {
 
               {/* Google Button */}
               <Field>
-                <GoogleSignInButton />
+                <GoogleSignInButton redirectTo={goingTo} />
                 <FieldDescription className="px-6 text-center">
                   Already have an account?{" "}
-                  <Link to={"/login"}>
+                  <Link to={"/login"} state={goingTo}>
                     <Button variant="link">Login</Button>
                   </Link>
                 </FieldDescription>
