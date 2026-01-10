@@ -34,7 +34,7 @@ const InnerApp = () => {
         <div className="flex-1 py-10 flex flex-col">
           <Outlet />
         </div>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </>
   );

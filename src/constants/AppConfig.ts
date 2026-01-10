@@ -5,7 +5,7 @@ export const AppConfig = {
     footer_text: "[REDACTED]",
   },
   fallbacks: {
-    defaultTheme: "dark", // "dark" || "trues"
-    defaultCursor: true, // true || false
+    defaultTheme: "dark", // "dark" || "light"
+    defaultCursor: false, // true || false
   },
 };
