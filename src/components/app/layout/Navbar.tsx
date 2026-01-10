@@ -192,7 +192,7 @@ const Navbar = () => {
         ) : (
           <Link to={"/login"}>
             <Button
-              size={"sm"}
+              size={"lg"}
               variant={"outline"}
               className="flex items-center gap-3 lg:px-3.5 lg:py-4"
             >
