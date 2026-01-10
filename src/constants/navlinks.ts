@@ -1,38 +1,65 @@
+import {
+  HomeIcon,
+  Tags,
+  CircleFadingPlus,
+  CircleUserRound,
+  Send,
+  CircleDot,
+} from "lucide-react";
+
 export const nav_links = [
   {
     id: 1,
     text: "Home",
-    link: "/",
+    icon: HomeIcon,
+    href: "/",
     hidden: false,
   },
   {
     id: 2,
     text: "Services",
-    link: "/services",
+    icon: Tags,
+    href: "/services",
     hidden: false,
   },
   {
     id: 3,
     text: "Create",
-    link: "/create",
-    hidden: true,
+    icon: CircleFadingPlus,
+    href: "/create",
+    hidden: false,
   },
-  // {
-  //   id: 4,
-  //   text: "Profile",
-  //   link: "/profile",
-  //   hidden: true,
-  // },
+  {
+    id: 4,
+    text: "Profile",
+    icon: CircleUserRound,
+    href: "/profile",
+    hidden: false,
+  },
   {
     id: 5,
-    text: "About",
-    link: "/about",
+    text: "Contact",
+    icon: Send,
+    href: "/contact",
     hidden: false,
   },
   {
     id: 6,
-    text: "Contact",
-    link: "/contact",
+    text: "About",
+    icon: CircleDot,
+    href: "/about",
     hidden: false,
   },
+  // Example
+  // {
+  //   id: 3,
+  //   text: "Pages",
+  //   icon: PanelTopIcon,
+  //   hidden: false,
+  //   children: [
+  //     { text: "Landing", href: "/landing", icon: PanelTopIcon },
+  //     { text: "Pricing", href: "/pricing", icon: PanelTopIcon },
+  //     { text: "Checkout", href: "/checkout", icon: PanelTopIcon },
+  //   ],
+  // },
 ];

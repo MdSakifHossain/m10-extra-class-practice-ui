@@ -17,8 +17,6 @@ const GoogleSignInButton = ({ redirectTo = "" }) => {
     try {
       await signInWithGoogle();
       navigate(redirectTo || "/", { replace: true });
-      console.log("redirecting to: ", redirectTo);
-      console.log("redirection: successful");
       toast.custom(() => <SuccessSonner title="Login Successful" />);
     } catch (err) {
       console.error(err);
