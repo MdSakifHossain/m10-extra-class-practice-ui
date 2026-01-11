@@ -83,11 +83,11 @@ const Navbar = () => {
             </SheetHeader>
 
             <div className="flex flex-col gap-1 py-3 px-1">
-              {nav_links
-                .filter((item) => !item.hidden)
-                .map((item) => (
-                  <NavItem key={item.id} item={item} />
-                ))}
+              {user
+                ? nav_links.map((item) => <NavItem key={item.id} item={item} />)
+                : nav_links
+                    .filter((item) => !item.hidden)
+                    .map((item) => <NavItem key={item.id} item={item} />)}
             </div>
 
             <Separator />

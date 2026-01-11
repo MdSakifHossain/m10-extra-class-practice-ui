@@ -34,6 +34,7 @@ const GoogleSignInButton = ({ redirectTo = "" }) => {
       onClick={() => handleGoogleLogin()}
       variant="outline"
       type="button"
+      size="lg"
       className="flex items-center justify-center gap-3"
     >
       <img
