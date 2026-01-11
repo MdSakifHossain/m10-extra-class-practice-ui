@@ -54,11 +54,14 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import { Kbd } from "@/components/ui/kbd";
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
   const { site_title, cursor, setCursor, theme, setTheme } = useAppConfig();
   const navigate = useNavigate();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleGoogleLogout = () => {
     signOutUser();
@@ -66,13 +69,45 @@ const Navbar = () => {
     toast.custom(() => <SuccessSonner title="Logout Successful" />);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const target = e.target;
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      // user is typing so dont do shit.
+      if (isTyping) return;
+
+      const shortcuts = {
+        s: () => setIsSheetOpen((prev) => !prev),
+        d: () => setTheme((prev) => (prev === "dark" ? "light" : "dark")),
+        c: () => setCursor((prev) => !prev),
+      };
+
+      const action = shortcuts[e.key];
+
+      // if theres no preset then return
+      if (!action) return;
+
+      // All Ok && We take control && call the function
+      e.preventDefault();
+      action();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div
       className="flex items-center justify-between px-5 py-3 lg:px-24 lg:py-4 border-b"
       id="navbar"
     >
       <div className="flex items-center justify-center gap-2 lg:gap-4">
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger>
             <TextAlignJustify />
           </SheetTrigger>
@@ -95,7 +130,9 @@ const Navbar = () => {
             <div className="px-3 lg:px-5 py-6 flex flex-col gap-4">
               {/* Cursor Switch */}
               <Label className="flex items-center justify-between px-2">
-                <p className="text-lg">Cursor:</p>
+                <p className="text-lg flex items-center gap-4">
+                  Cursor: <Kbd>C</Kbd>
+                </p>
                 <Switch
                   aria-label="Square switch"
                   className="rounded-xs [&_span]:rounded-xs"
@@ -106,7 +143,9 @@ const Navbar = () => {
 
               {/* Dark Mode Switch */}
               <Label className="flex items-center justify-between px-2">
-                <p className="text-lg">Dark Mode:</p>
+                <p className="text-lg flex items-center gap-4">
+                  Dark Mode: <Kbd>D</Kbd>
+                </p>
                 <Switch
                   aria-label="Square switch"
                   className="rounded-xs [&_span]:rounded-xs"
