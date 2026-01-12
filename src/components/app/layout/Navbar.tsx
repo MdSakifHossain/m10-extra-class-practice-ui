@@ -73,7 +73,7 @@ const Navbar = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [shortcutDialogue, setShortcutDialogue] = useState(false);
 
-  const handleGoogleLogout = () => {
+  const handleLogout = () => {
     signOutUser();
     navigate("/login");
     toast.custom(() => <SuccessSonner title="Logout Successful" />);
@@ -82,19 +82,19 @@ const Navbar = () => {
   const shortcuts = {
     i: {
       action: () => setShortcutDialogue((prev) => !prev),
-      description: "Toggle Shortcut",
+      description: "Shortcut",
     },
-    s: {
+    "shift+s": {
       action: () => setIsSheetOpen((prev) => !prev),
-      description: "Toggle Sidebar",
+      description: "Sidebar",
     },
     "shift+t": {
       action: () => setTheme((prev) => (prev === "dark" ? "light" : "dark")),
-      description: "Toggle Dark Mode",
+      description: "Dark Mode",
     },
     "shift+c": {
       action: () => setCursor((prev) => !prev),
-      description: "Toggle Cursor",
+      description: "Cursor",
     },
   };
 
@@ -198,7 +198,7 @@ const Navbar = () => {
 
         <Link
           to={"/"}
-          className="text-xl lg:text-4xl font-medium select-none italic flex items-center justify-center gap-1"
+          className="text-xl lg:text-4xl font-medium select-none italic flex items-end gap-1"
         >
           <img src="/vite.svg" alt="icon" className="size-6 lg:size-12" />
           <p className="hidden sm:block">{site_title || "site_title"}</p>
@@ -214,7 +214,7 @@ const Navbar = () => {
               <Sparkles className="size-5" /> Shortcuts
             </Button>
           </DialogTrigger>
-          <DialogContent className="dark:border-2">
+          <DialogContent className="border-2">
             <DialogHeader>
               <DialogTitle className="text-2xl">Shortcuts</DialogTitle>
               <DialogDescription>
@@ -222,16 +222,18 @@ const Navbar = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="w-full rounded-xl border">
+            <div className="w-full rounded-2xl flex flex-col items-start justify-between gap-2.5 py-4">
               {Object.entries(shortcuts)
                 .map(([key, { description }]) => ({
                   key,
                   description,
                 }))
                 .map((shortcut) => (
-                  <p className="flex items-center justify-between px-4 my-4 text-lg">
-                    <span className="font-medium">{shortcut.description}</span>{" "}
-                    :{" "}
+                  <p className="flex items-center justify-between text-lg w-full">
+                    <span className="font-medium">
+                      🔹 {shortcut.description}
+                    </span>
+                    ⟹
                     <Kbd className="text-base font-mono">
                       {shortcut.key.replace("+", " + ").toUpperCase()}
                     </Kbd>
@@ -286,7 +288,7 @@ const Navbar = () => {
                       </AlertDialogCancel>
                       <AlertDialogAction
                         asChild
-                        onClick={() => handleGoogleLogout()}
+                        onClick={() => handleLogout()}
                         size="lg"
                         variant="destructive"
                       >
