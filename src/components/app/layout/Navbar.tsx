@@ -7,7 +7,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Link, useNavigate } from "react-router";
-import { ModeToggle } from "@/components/app/appearance/mode-toggle";
+// import { ModeToggle } from "@/components/app/appearance/mode-toggle";
 import { nav_links } from "@/constants";
 import {
   LogIn,
@@ -16,6 +16,7 @@ import {
   TextAlignJustify,
   ChevronRight,
   Circle,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
@@ -56,17 +57,62 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { Kbd } from "@/components/ui/kbd";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
   const { site_title, cursor, setCursor, theme, setTheme } = useAppConfig();
   const navigate = useNavigate();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [shortcutDialogue, setShortcutDialogue] = useState(false);
 
   const handleGoogleLogout = () => {
     signOutUser();
     navigate("/login");
     toast.custom(() => <SuccessSonner title="Logout Successful" />);
+  };
+
+  const shortcuts = {
+    i: {
+      action: () => setShortcutDialogue((prev) => !prev),
+      description: "Toggle Shortcut",
+    },
+    s: {
+      action: () => setIsSheetOpen((prev) => !prev),
+      description: "Toggle Sidebar",
+    },
+    "shift+t": {
+      action: () => setTheme((prev) => (prev === "dark" ? "light" : "dark")),
+      description: "Toggle Dark Mode",
+    },
+    "shift+c": {
+      action: () => setCursor((prev) => !prev),
+      description: "Toggle Cursor",
+    },
+  };
+
+  const getKeyCombo = (e) => {
+    const keys = [];
+
+    if (e.ctrlKey) keys.push("ctrl");
+    if (e.altKey) keys.push("alt");
+    if (e.shiftKey) keys.push("shift");
+
+    const ignoredKeys = ["control", "alt", "shift", "meta"];
+
+    if (!ignoredKeys.includes(e.key.toLowerCase())) {
+      keys.push(e.key.toLowerCase());
+    }
+
+    const combo = keys.join("+");
+    return combo;
   };
 
   useEffect(() => {
@@ -80,13 +126,8 @@ const Navbar = () => {
       // user is typing so dont do shit.
       if (isTyping) return;
 
-      const shortcuts = {
-        s: () => setIsSheetOpen((prev) => !prev),
-        d: () => setTheme((prev) => (prev === "dark" ? "light" : "dark")),
-        c: () => setCursor((prev) => !prev),
-      };
-
-      const action = shortcuts[e.key];
+      const combo = getKeyCombo(e);
+      const action = shortcuts[combo]?.action;
 
       // if theres no preset then return
       if (!action) return;
@@ -130,9 +171,7 @@ const Navbar = () => {
             <div className="px-3 lg:px-5 py-6 flex flex-col gap-4">
               {/* Cursor Switch */}
               <Label className="flex items-center justify-between px-2">
-                <p className="text-lg flex items-center gap-4">
-                  Cursor: <Kbd>C</Kbd>
-                </p>
+                <p className="text-lg flex items-center gap-4">Cursor:</p>
                 <Switch
                   aria-label="Square switch"
                   className="rounded-xs [&_span]:rounded-xs"
@@ -143,9 +182,7 @@ const Navbar = () => {
 
               {/* Dark Mode Switch */}
               <Label className="flex items-center justify-between px-2">
-                <p className="text-lg flex items-center gap-4">
-                  Dark Mode: <Kbd>D</Kbd>
-                </p>
+                <p className="text-lg flex items-center gap-4">Dark Mode:</p>
                 <Switch
                   aria-label="Square switch"
                   className="rounded-xs [&_span]:rounded-xs"
@@ -168,8 +205,41 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="flex items-center gap-1.5 lg:gap-4">
-        <ModeToggle className="hidden sm:flex" />
+      <div className="flex items-center gap-1.5 lg:gap-3">
+        {/* <ModeToggle className="hidden sm:flex" /> */}
+
+        <Dialog open={shortcutDialogue} onOpenChange={setShortcutDialogue}>
+          <DialogTrigger>
+            <Button variant="outline" size="lg" className="rounded-full">
+              <Sparkles className="size-5" /> Shortcuts
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="dark:border-2">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">Shortcuts</DialogTitle>
+              <DialogDescription>
+                Use your Keyboard and Navigate easily
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="w-full rounded-xl border">
+              {Object.entries(shortcuts)
+                .map(([key, { description }]) => ({
+                  key,
+                  description,
+                }))
+                .map((shortcut) => (
+                  <p className="flex items-center justify-between px-4 my-4 text-lg">
+                    <span className="font-medium">{shortcut.description}</span>{" "}
+                    :{" "}
+                    <Kbd className="text-base font-mono">
+                      {shortcut.key.replace("+", " + ").toUpperCase()}
+                    </Kbd>
+                  </p>
+                ))}
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {user ? (
           <Popover>
