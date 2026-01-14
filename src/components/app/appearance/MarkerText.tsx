@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 
-const MarkerText = ({ className, children }) => {
+const MarkerText = ({ className = "", children }) => {
   return (
     <p
       className={`bg-primary text-background dark:text-foreground ${className}`}
