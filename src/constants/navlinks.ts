@@ -5,6 +5,7 @@ import {
   CircleUserRound,
   Send,
   CircleDot,
+  ScrollText,
 } from "lucide-react";
 
 export const nav_links = [
@@ -38,13 +39,20 @@ export const nav_links = [
   },
   {
     id: 5,
+    text: "My Services",
+    icon: ScrollText,
+    href: "/my-services",
+    hidden: true,
+  },
+  {
+    id: 6,
     text: "Contact",
     icon: Send,
     href: "/contact",
     hidden: false,
   },
   {
-    id: 6,
+    id: 7,
     text: "About",
     icon: CircleDot,
     href: "/about",
