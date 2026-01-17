@@ -21,7 +21,7 @@ export const nav_links = [
     text: "Services",
     icon: Tags,
     href: "/services",
-    hidden: true,
+    hidden: false,
   },
   {
     id: 3,

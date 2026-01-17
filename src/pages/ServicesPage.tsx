@@ -6,25 +6,12 @@ import { toast } from "sonner";
 import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import DangerAlert from "@/components/app/alerts/DangerAlert";
 import Loading from "@/components/app/feedback/Loading";
-import { useAuth } from "@/contexts/authContext/AuthProvider";
 import ProductCard from "@/components/app/features/ProductCard";
 
 const ServicesPage = () => {
-  const { user } = useAuth();
   const [services, setServices] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  if (!user) {
-    return (
-      <div className="container mx-auto flex-1 flex items-center justify-center flex-col gap-8">
-        <DangerAlert
-          title="Login Required"
-          description="Please log in to view services."
-        />
-      </div>
-    );
-  }
 
   useEffect(() => {
     const fetchServices = async () => {

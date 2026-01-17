@@ -23,11 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "services",
-        element: (
-          <PrivatePage>
-            <ServicesPage />
-          </PrivatePage>
-        ),
+        element: <ServicesPage />,
       },
       {
         path: "create",
