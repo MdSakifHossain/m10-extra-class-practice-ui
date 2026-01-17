@@ -209,10 +209,11 @@ const Navbar = () => {
         {/* <ModeToggle className="hidden sm:flex" /> */}
 
         <Dialog open={shortcutDialogue} onOpenChange={setShortcutDialogue}>
-          <DialogTrigger>
-            <Button variant="outline" size="lg" className="rounded-full">
+          <DialogTrigger className="border bg-clip-padding text-sm font-medium inline-flex items-center justify-center whitespace-nowrap gap-4 rounded-full border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs h-10 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
+            {/* <Button variant="outline" size="lg" className="rounded-full">
               <Sparkles className="size-5" /> Shortcuts
-            </Button>
+            </Button> */}
+            <Sparkles className="size-5" /> Shortcuts
           </DialogTrigger>
           <DialogContent className="border-2">
             <DialogHeader>
@@ -228,8 +229,11 @@ const Navbar = () => {
                   key,
                   description,
                 }))
-                .map((shortcut) => (
-                  <p className="flex items-center justify-between text-lg w-full">
+                .map((shortcut, index) => (
+                  <p
+                    key={index}
+                    className="flex items-center justify-between text-lg w-full"
+                  >
                     <span className="font-medium">
                       🔹 {shortcut.description}
                     </span>
@@ -245,10 +249,8 @@ const Navbar = () => {
 
         {user ? (
           <Popover>
-            <PopoverTrigger className="border-2 rounded-full border-transparent dark:border-primary">
-              <Button size="icon-lg" variant="outline" className="rounded-full">
-                <UserRound className="size-5" />
-              </Button>
+            <PopoverTrigger className="border bg-clip-padding text-sm font-medium inline-flex items-center justify-center whitespace-nowrap gap-4 rounded-full border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs h-10 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
+              <UserRound className="size-5" />
             </PopoverTrigger>
             <PopoverContent className="w-80">
               <div className="grid gap-4">
@@ -261,15 +263,8 @@ const Navbar = () => {
                 </div>
 
                 <AlertDialog>
-                  <AlertDialogTrigger>
-                    <Button
-                      size={"lg"}
-                      variant="destructive"
-                      className="flex items-center gap-3 px-3.5 py-4 w-full"
-                      // onClick={() => handleGoogleLogout()}
-                    >
-                      Logout <LogOut className="size-4" />
-                    </Button>
+                  <AlertDialogTrigger className="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&_svg:not([class*='size-'])]:size-4 justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none flex items-center gap-3 px-3.5 py-4 w-full bg-destructive/10 hover:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive dark:hover:bg-destructive/30 h-10 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
+                    Logout <LogOut className="size-4" />
                   </AlertDialogTrigger>
 
                   <AlertDialogContent>
@@ -287,7 +282,6 @@ const Navbar = () => {
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
-                        asChild
                         onClick={() => handleLogout()}
                         size="lg"
                         variant="destructive"
