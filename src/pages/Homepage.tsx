@@ -9,7 +9,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const Homepage = () => {
-  const { site_title } = useAppConfig();
+  const { site_title, popular_items_limit } = useAppConfig();
   const [popularServices, setPopularServices] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,7 @@ const Homepage = () => {
         <h3 className="text-2xl font-medium">Popular Services</h3>
 
         <div className="w-full flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {popularServices.map((service) => (
+          {popularServices.slice(0, popular_items_limit).map((service) => (
             <ProductCard key={service._id} service={service} />
           ))}
         </div>
