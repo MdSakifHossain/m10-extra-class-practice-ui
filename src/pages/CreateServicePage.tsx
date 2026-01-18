@@ -86,7 +86,7 @@ const CreateServicePage = () => {
         Create Service
       </MarkerText>
 
-      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-sm">
+      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-3xl">
         <FieldGroup>
           {/* Product Name */}
           <Field>
