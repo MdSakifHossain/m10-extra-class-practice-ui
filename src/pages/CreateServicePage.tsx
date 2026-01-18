@@ -81,12 +81,12 @@ const CreateServicePage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="container mx-auto flex-1 flex flex-col items-center gap-16">
+    <div className="bg-background flex-1 flex flex-col gap-12 items-center justify-start p-6 md:p-10">
       <MarkerText className="text-5xl italic font-medium">
         Create Service
       </MarkerText>
 
-      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-lg">
+      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-sm">
         <FieldGroup>
           {/* Product Name */}
           <Field>
