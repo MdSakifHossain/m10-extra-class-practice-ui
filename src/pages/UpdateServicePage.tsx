@@ -24,14 +24,14 @@ import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
-import { todayMs, formatDateFromMs } from "@/lib/date";
+import { formatDateFromMs } from "@/lib/date";
 
 const UpdateServicePage = () => {
   const { user } = useAuth();
-  const [dateMs, setDateMs] = useState(() => todayMs());
-  const [datePickerPopoverOpen, setDatePickerPopoverOpen] = useState(false);
   const params = useParams();
   const [service, setService] = useState({});
+  const [dateMs, setDateMs] = useState(null);
+  const [datePickerPopoverOpen, setDatePickerPopoverOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -65,7 +65,9 @@ const UpdateServicePage = () => {
         );
         setService(data);
         setCategory(data.category);
+        setDateMs(data.pickup_date);
         setError(null);
+        console.log("Initial Fetch", data);
       } catch (err) {
         console.error(err);
         setError(err);
@@ -255,7 +257,7 @@ const UpdateServicePage = () => {
 
           {/* submit button */}
           <Field>
-            <Button type="submit" size="lg" className="text-base">
+            <Button type="submit" size="lg" className="text-base py-6">
               Update
             </Button>
           </Field>
