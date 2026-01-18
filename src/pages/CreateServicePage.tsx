@@ -1,26 +1,12 @@
 // @ts-nocheck
 
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
-import InputField from "@/components/app/forms/InputField";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,44 +22,17 @@ import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
 import MarkerText from "@/components/app/appearance/MarkerText";
 import { useNavigate } from "react-router";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import Loading from "@/components/app/feedback/Loading";
+import { todayMs, formatDateFromMs } from "@/lib/date";
 
 const CreateServicePage = () => {
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const date = parseMMDDYYYY(input);
+  const [dateMs, setDateMs] = useState(() => todayMs());
+  const [datePickerPopoverOpen, setDatePickerPopoverOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const { user } = useAuth();
-  const { email: userEmail } = user || {};
-
-  function formatDate(date: Date | undefined) {
-    if (!date) return "";
-    return date.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-  }
-
-  // simple MM/DD/YYYY parser, nothing “AI-ish”
-  function parseMMDDYYYY(value: string): Date | undefined {
-    const parts = value.split("/");
-    if (parts.length !== 3) return;
-    const [mm, dd, yyyy] = parts.map(Number);
-    if (!mm || !dd || !yyyy) return;
-    const d = new Date(yyyy, mm - 1, dd);
-    // basic sanity check
-    if (d.getMonth() !== mm - 1 || d.getDate() !== dd) return;
-    return d;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,37 +46,10 @@ const CreateServicePage = () => {
       price: Number(data.get("price")),
       location: data.get("location"),
       image_url: data.get("image_url"),
-      pickup_date: data.get("pickup_date"),
+      pickup_date: dateMs,
       description: data.get("description"),
       email: data.get("email"),
     };
-
-    const emptyFields = Object.keys(formData).filter((key) => {
-      const value = formData[key];
-
-      // numbers: accept 0, reject NaN
-      if (typeof value === "number") {
-        return isNaN(value);
-      }
-
-      // strings: reject empty/whitespace
-      if (typeof value === "string") {
-        return value.trim() === "";
-      }
-
-      // null / undefined
-      return value == null;
-    });
-
-    if (emptyFields.length > 0) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Please fill out All Fields"
-          description={`Missing: ${emptyFields.join(", ")}`}
-        />
-      ));
-      return;
-    }
 
     try {
       setLoading(true);
@@ -135,8 +67,6 @@ const CreateServicePage = () => {
       ));
 
       form.reset();
-      setInput("");
-      setCategory("");
       navigate("/services");
     } catch (err) {
       console.error(err);
@@ -148,174 +78,176 @@ const CreateServicePage = () => {
     }
   };
 
+  if (loading) return <Loading />;
+
   return (
     <div className="container mx-auto flex-1 flex flex-col items-center gap-16">
       <MarkerText className="text-5xl italic font-medium">
         Create Service
       </MarkerText>
 
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle className="text-3xl text-center">Create Service</CardTitle>
-          <CardDescription className="text-center">
-            Enter Essentials for Making a Service
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form
-            onSubmit={(e) => handleSubmit(e)}
-            className="flex flex-col gap-6"
-          >
-            {/* Product Name */}
-            <InputField>
-              <Label className="text-lg">Product / Pet Name</Label>
+      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-lg">
+        <FieldGroup>
+          {/* Product Name */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Name</span>
               <Input
-                placeholder="Product Name"
                 type="text"
+                placeholder="Name"
                 name="name"
-                className="text-lg! px-5 py-6"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
               />
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            {/* Category */}
-            <InputField>
-              <Label className="text-lg">Category</Label>
+          {/* Category */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Category</span>
 
-              <Select
+              <NativeSelect
+                className="w-full"
                 name="category"
                 value={category}
-                onValueChange={setCategory}
+                onChange={(e) => setCategory(e.target.value)}
               >
-                <SelectTrigger className="w-full py-6 text-lg!">
-                  <SelectValue placeholder="Select a Category" />
-                </SelectTrigger>
-                <SelectContent className="**:text-lg!">
-                  <SelectItem value="">Select a Category</SelectItem>
-                  <SelectItem value="pet">Pet</SelectItem>
-                  <SelectItem value="food">Food</SelectItem>
-                  <SelectItem value="accessories">Accessories</SelectItem>
-                  <SelectItem value="care-products">Care Products</SelectItem>
-                </SelectContent>
-              </Select>
-            </InputField>
+                <NativeSelectOption value="">
+                  Select a Category
+                </NativeSelectOption>
+                <NativeSelectOption value="pet">Pet</NativeSelectOption>
+                <NativeSelectOption value="food">Food</NativeSelectOption>
+                <NativeSelectOption value="accessories">
+                  Accessories
+                </NativeSelectOption>
+                <NativeSelectOption value="care-products">
+                  Care Products
+                </NativeSelectOption>
+              </NativeSelect>
+            </FieldLabel>
+          </Field>
 
-            {/* Price */}
-            <InputField>
-              <Label className="text-lg">Price</Label>
+          {/* Price */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Price</span>
               <Input
-                placeholder="Price"
                 type="number"
+                placeholder="Price"
                 name="price"
-                className="text-lg! px-5 py-6"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
               />
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            {/* Location */}
-            <InputField>
-              <Label className="text-lg">Location</Label>
+          {/* Location */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Location</span>
               <Input
-                placeholder="Location"
                 type="text"
+                placeholder="Location"
                 name="location"
-                className="text-lg! px-5 py-6"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
               />
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            {/* Description */}
-            <InputField>
-              <Label className="text-lg">Description</Label>
+          {/* Description */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Description</span>
               <Textarea
                 placeholder="Description"
                 name="description"
-                className="text-lg! h-32 py-4 px-5"
+                required
+                className="text-base! h-32 py-3 px-4 placeholder:font-normal"
               />
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            {/* Image url */}
-            <InputField>
-              <Label className="text-lg">Image (URL)</Label>
+          {/* Image url */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Image URL</span>
               <Input
-                placeholder="Image"
                 type="url"
+                placeholder="Image URL"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
                 name="image_url"
-                className="text-lg! px-5 py-6"
               />
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            {/* Pick Up Date */}
-            <InputField>
-              <Label className="text-lg">Pickup Date</Label>
-              <div className="flex flex-col gap-3">
-                <div className="relative flex gap-2">
-                  <Input
-                    value={input}
-                    placeholder="MM/DD/YYYY"
-                    name="pickup_date"
-                    readOnly
-                    className="bg-background text-lg! px-5 py-6"
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "ArrowDown") {
-                        e.preventDefault();
-                        setOpen(true);
-                      }
-                    }}
-                  />
+          {/* Pick Up Date */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Pick Up Date</span>
+              <div className="relative w-full">
+                <Input
+                  readOnly
+                  value={formatDateFromMs(dateMs)}
+                  className="bg-background py-6 px-4 cursor-pointer text-base! placeholder:font-normal"
+                  onClick={() => setDatePickerPopoverOpen(true)}
+                />
 
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="absolute top-1/2 right-6 size-6 -translate-y-1/2"
-                      >
-                        <CalendarIcon className="size-6" />
-                        <span className="sr-only">Select date</span>
-                      </Button>
-                    </PopoverTrigger>
+                <Popover
+                  open={datePickerPopoverOpen}
+                  onOpenChange={setDatePickerPopoverOpen}
+                >
+                  <PopoverTrigger>
+                    <CalendarIcon className="size-5 absolute top-1/2 right-5 -translate-y-1/2" />
+                  </PopoverTrigger>
 
-                    <PopoverContent
-                      className="w-auto overflow-hidden p-0"
-                      align="end"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={(d) => {
-                          if (d) setInput(d.toLocaleDateString("en-US"));
-                          setOpen(false);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                <div className="text-muted-foreground px-1 text-sm">
-                  Your Selected Date is{" "}
-                  <span className="font-medium">{formatDate(date)}</span>.
-                </div>
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      mode="single"
+                      selected={new Date(dateMs)}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        setDateMs(date.getTime());
+                        setDatePickerPopoverOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            {/* Email */}
-            <InputField>
-              <Label className="text-lg">Email</Label>
+          {/* Email */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Email</span>
               <Input
-                placeholder="Email"
                 type="email"
-                name="email"
+                placeholder="Email"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
                 readOnly
-                value={userEmail}
-                className="text-lg! px-5 py-6"
+                value={user?.email}
+                name="email"
               />
-            </InputField>
+            </FieldLabel>
+          </Field>
 
-            <Button type="submit" disabled={loading} className="text-xl py-7">
-              Create
+          {/* submit button */}
+          <Field>
+            <Button
+              type="submit"
+              size="lg"
+              className="text-base py-6"
+              disabled={loading ? true : false}
+            >
+              {loading ? "Creating..." : "Create Service"}
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </Field>
+        </FieldGroup>
+      </form>
     </div>
   );
 };
