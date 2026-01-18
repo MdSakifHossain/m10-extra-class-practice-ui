@@ -123,7 +123,7 @@ const CreateServicePage = () => {
       setLoading(true);
       const { data: res } = await axios.post(
         `http://localhost:3000/services`,
-        formData
+        formData,
       );
       console.log(res);
       // Green signal to go on

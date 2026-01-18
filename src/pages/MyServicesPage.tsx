@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { PenLine, Trash2 } from "lucide-react";
+import { Link } from "react-router";
 
 const MyServicesPage = () => {
   const { user } = useAuth();
@@ -120,13 +121,15 @@ const MyServicesPage = () => {
               <TableCell className="capitalize">{service.category}</TableCell>
               <TableCell>{service.price}</TableCell>
               <TableCell className="flex items-center justify-end gap-8 pe-8">
-                <Button
-                  className="flex items-center justify-center gap-2 px-4 rounded-full"
-                  size="lg"
-                  variant="outline"
-                >
-                  Edit <PenLine />
-                </Button>
+                <Link to={`/update-service/${service._id}`}>
+                  <Button
+                    className="flex items-center justify-center gap-2 px-4 rounded-full"
+                    size="lg"
+                    variant="outline"
+                  >
+                    Edit <PenLine />
+                  </Button>
+                </Link>
                 <Button
                   className="flex items-center justify-center gap-2 px-4"
                   size="icon-lg"
