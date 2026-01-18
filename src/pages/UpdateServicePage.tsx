@@ -1,6 +1,9 @@
 // @ts-nocheck
 
+import DangerAlert from "@/components/app/alerts/DangerAlert";
+import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import MarkerText from "@/components/app/appearance/MarkerText";
+import Loading from "@/components/app/feedback/Loading";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -20,20 +23,8 @@ import axios from "axios";
 import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-
-function todayMs() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d.getTime();
-}
-
-function formatDateFromMs(ms) {
-  return new Date(ms).toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-}
+import { toast } from "sonner";
+import { todayMs, formatDateFromMs } from "@/lib/date";
 
 const UpdateServicePage = () => {
   const { user } = useAuth();
@@ -42,6 +33,8 @@ const UpdateServicePage = () => {
   const params = useParams();
   const [service, setService] = useState({});
   const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,18 +59,39 @@ const UpdateServicePage = () => {
   useEffect(() => {
     const doTheThing = async () => {
       try {
+        setLoading(true);
         const { data } = await axios.get(
           `http://localhost:3000/services/${params.id}`,
         );
         setService(data);
         setCategory(data.category);
-        console.log(data);
+        setError(null);
       } catch (err) {
         console.error(err);
+        setError(err);
+        toast.custom(() => (
+          <DangerSonner title={err.name} description={err.message} />
+        ));
+      } finally {
+        setLoading(false);
       }
     };
     doTheThing();
   }, [params.id]);
+
+  if (loading) return <Loading />;
+
+  if (error && error.code === "ERR_NETWORK") {
+    return (
+      <div className="container mx-auto p-8 flex-1 flex items-center justify-center flex-col gap-4">
+        {/* <p>Couldn't reach the server. Check your backend or network. 🚨</p> */}
+        <DangerAlert
+          title={error.message}
+          description="Couldn't reach the server. Check your backend or network. 🚨"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background flex-1 flex flex-col gap-12 items-center justify-start p-6 md:p-10">
@@ -85,7 +99,7 @@ const UpdateServicePage = () => {
         Update Service
       </MarkerText>
 
-      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-sm">
+      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-3xl">
         <FieldGroup>
           {/* Product Name */}
           <Field>
