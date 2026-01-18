@@ -21,42 +21,27 @@ import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
+function todayMs() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+function formatDateFromMs(ms) {
+  return new Date(ms).toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
 const UpdateServicePage = () => {
   const { user } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const date = parseMMDDYYYY(input);
+  const [dateMs, setDateMs] = useState(() => todayMs());
+  const [datePickerPopoverOpen, setDatePickerPopoverOpen] = useState(false);
   const params = useParams();
   const [service, setService] = useState({});
   const [category, setCategory] = useState("");
-
-  // simple MM/DD/YYYY parser, nothing “AI-ish”
-  function parseMMDDYYYY(value: string): Date | undefined {
-    const parts = value.split("/");
-    if (parts.length !== 3) return;
-    const [mm, dd, yyyy] = parts.map(Number);
-    if (!mm || !dd || !yyyy) return;
-    const d = new Date(yyyy, mm - 1, dd);
-    // basic sanity check
-    if (d.getMonth() !== mm - 1 || d.getDate() !== dd) return;
-    return d;
-  }
-
-  // human Readable format
-  function formatDate(date: Date | undefined) {
-    if (!date) return "";
-    return date.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-  }
-
-  // for the initial date formatting
-  function formatMDY(dateString) {
-    const d = new Date(dateString);
-    return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,14 +50,14 @@ const UpdateServicePage = () => {
     const data = new FormData(form);
 
     const formData = {
-      name: data.get("name"),
-      category: data.get("category"),
+      name: data.get("name").trim(),
+      category: data.get("category").trim(),
       price: Number(data.get("price")),
-      location: data.get("location"),
-      image_url: data.get("image_url"),
-      pickup_date: data.get("pickup_date"),
-      description: data.get("description"),
-      email: data.get("email"),
+      location: data.get("location").trim(),
+      image_url: data.get("image_url").trim(),
+      pickup_date: dateMs,
+      description: data.get("description").trim(),
+      email: data.get("email").trim(),
     };
 
     console.log(formData);
@@ -86,13 +71,13 @@ const UpdateServicePage = () => {
         );
         setService(data);
         setCategory(data.category);
-        setInput(formatMDY(data.createdAt));
+        console.log(data);
       } catch (err) {
         console.error(err);
       }
     };
     doTheThing();
-  }, [params.id, service]);
+  }, [params.id]);
 
   return (
     <div className="bg-background flex-1 flex flex-col gap-12 items-center justify-start p-6 md:p-10">
@@ -100,184 +85,168 @@ const UpdateServicePage = () => {
         Update Service
       </MarkerText>
 
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-6">
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <FieldGroup>
-              {/* Product Name */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Name</span>
-                  <Input
-                    type="text"
-                    placeholder="Name"
-                    name="name"
-                    className="py-6 px-4 text-base! placeholder:font-normal"
-                    required
-                    defaultValue={service.name}
-                  />
-                </FieldLabel>
-              </Field>
+      <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-sm">
+        <FieldGroup>
+          {/* Product Name */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Name</span>
+              <Input
+                type="text"
+                placeholder="Name"
+                name="name"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
+                defaultValue={service.name}
+              />
+            </FieldLabel>
+          </Field>
 
-              {/* Category */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Category</span>
+          {/* Category */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Category</span>
 
-                  <NativeSelect
-                    className="w-full"
-                    name="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                  >
-                    <NativeSelectOption value="">
-                      Select a Category
-                    </NativeSelectOption>
-                    <NativeSelectOption value="pet">Pet</NativeSelectOption>
-                    <NativeSelectOption value="food">Food</NativeSelectOption>
-                    <NativeSelectOption value="accessories">
-                      Accessories
-                    </NativeSelectOption>
-                    <NativeSelectOption value="care-products">
-                      Care Products
-                    </NativeSelectOption>
-                  </NativeSelect>
-                </FieldLabel>
-              </Field>
+              <NativeSelect
+                className="w-full"
+                name="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <NativeSelectOption value="">
+                  Select a Category
+                </NativeSelectOption>
+                <NativeSelectOption value="pet">Pet</NativeSelectOption>
+                <NativeSelectOption value="food">Food</NativeSelectOption>
+                <NativeSelectOption value="accessories">
+                  Accessories
+                </NativeSelectOption>
+                <NativeSelectOption value="care-products">
+                  Care Products
+                </NativeSelectOption>
+              </NativeSelect>
+            </FieldLabel>
+          </Field>
 
-              {/* Price */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Price</span>
-                  <Input
-                    type="number"
-                    placeholder="Price"
-                    name="price"
-                    className="py-6 px-4 text-base! placeholder:font-normal"
-                    required
-                    defaultValue={service.price}
-                  />
-                </FieldLabel>
-              </Field>
+          {/* Price */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Price</span>
+              <Input
+                type="number"
+                placeholder="Price"
+                name="price"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
+                defaultValue={service.price}
+              />
+            </FieldLabel>
+          </Field>
 
-              {/* Location */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Location</span>
-                  <Input
-                    type="text"
-                    placeholder="Location"
-                    name="location"
-                    className="py-6 px-4 text-base! placeholder:font-normal"
-                    required
-                    defaultValue={service.location}
-                  />
-                </FieldLabel>
-              </Field>
+          {/* Location */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Location</span>
+              <Input
+                type="text"
+                placeholder="Location"
+                name="location"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
+                defaultValue={service.location}
+              />
+            </FieldLabel>
+          </Field>
 
-              {/* Description */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Description</span>
-                  <Textarea
-                    placeholder="Description"
-                    name="description"
-                    required
-                    defaultValue={service.description}
-                    className="text-base! h-32 py-3 px-4 placeholder:font-normal"
-                  />
-                </FieldLabel>
-              </Field>
+          {/* Description */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Description</span>
+              <Textarea
+                placeholder="Description"
+                name="description"
+                required
+                defaultValue={service.description}
+                className="text-base! h-32 py-3 px-4 placeholder:font-normal"
+              />
+            </FieldLabel>
+          </Field>
 
-              {/* Image url */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Image URL</span>
-                  <Input
-                    type="url"
-                    placeholder="Image URL"
-                    className="py-6 px-4 text-base! placeholder:font-normal"
-                    required
-                    defaultValue={service.image_url}
-                    name="image_url"
-                  />
-                </FieldLabel>
-              </Field>
+          {/* Image url */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Image URL</span>
+              <Input
+                type="url"
+                placeholder="Image URL"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
+                defaultValue={service.image_url}
+                name="image_url"
+              />
+            </FieldLabel>
+          </Field>
 
-              {/* Pick Up Date */}
-              <Field>
-                <FieldLabel className="text-lg">Pickup Date</FieldLabel>
-                <div className="flex flex-col gap-3">
-                  <div className="relative flex gap-2">
-                    <Input
-                      value={input}
-                      placeholder="MM/DD/YYYY"
-                      name="pickup_date"
-                      readOnly
-                      className="bg-background text-base! px-5 py-6"
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "ArrowDown") {
-                          e.preventDefault();
-                          setOpen(true);
-                        }
+          {/* Pick Up Date */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Pick Up Date</span>
+              <div className="relative w-full">
+                <Input
+                  readOnly
+                  value={formatDateFromMs(dateMs)}
+                  className="bg-background py-6 px-4 cursor-pointer text-base! placeholder:font-normal"
+                  onClick={() => setDatePickerPopoverOpen(true)}
+                />
+
+                <Popover
+                  open={datePickerPopoverOpen}
+                  onOpenChange={setDatePickerPopoverOpen}
+                >
+                  <PopoverTrigger>
+                    <CalendarIcon className="size-5 absolute top-1/2 right-5 -translate-y-1/2" />
+                  </PopoverTrigger>
+
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      mode="single"
+                      selected={new Date(dateMs)}
+                      onSelect={(date) => {
+                        if (!date) return;
+                        setDateMs(date.getTime());
+                        setDatePickerPopoverOpen(false);
                       }}
                     />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </FieldLabel>
+          </Field>
 
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger className="absolute top-1/2 right-2 size-7 -translate-y-1/2 ps-80 pe-6">
-                        <CalendarIcon className="size-5" />
-                      </PopoverTrigger>
+          {/* Email */}
+          <Field>
+            <FieldLabel className="flex flex-col items-start gap-2.5">
+              <span className="text-base">Email</span>
+              <Input
+                type="email"
+                placeholder="Email"
+                className="py-6 px-4 text-base! placeholder:font-normal"
+                required
+                readOnly
+                defaultValue={user?.email}
+                name="email"
+              />
+            </FieldLabel>
+          </Field>
 
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="end"
-                      >
-                        <Calendar
-                          mode="single"
-                          selected={date}
-                          onSelect={(d) => {
-                            if (d) setInput(d.toLocaleDateString("en-US"));
-                            setOpen(false);
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <div className="text-muted-foreground px-1 text-sm">
-                    Your Selected Date is{" "}
-                    <span className="font-medium">{formatDate(date)}</span>.
-                  </div>
-                </div>
-              </Field>
-
-              {/* Email */}
-              <Field>
-                <FieldLabel className="flex flex-col items-start gap-2.5">
-                  <span className="text-base">Email</span>
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    className="py-6 px-4 text-base! placeholder:font-normal"
-                    required
-                    readOnly
-                    defaultValue={user?.email}
-                    name="email"
-                  />
-                </FieldLabel>
-              </Field>
-
-              {/* submit button */}
-              <Field>
-                <Button type="submit" size="lg" className="text-base">
-                  Update
-                </Button>
-              </Field>
-            </FieldGroup>
-          </form>
-        </div>
-      </div>
+          {/* submit button */}
+          <Field>
+            <Button type="submit" size="lg" className="text-base">
+              Update
+            </Button>
+          </Field>
+        </FieldGroup>
+      </form>
     </div>
   );
 };
