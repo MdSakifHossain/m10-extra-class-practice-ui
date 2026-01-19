@@ -22,13 +22,15 @@ import { useAuth } from "@/contexts/authContext/AuthProvider";
 import axios from "axios";
 import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import { formatDateFromMs } from "@/lib/date";
+import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
 
 const UpdateServicePage = () => {
   const { user } = useAuth();
   const params = useParams();
+  const navigate = useNavigate();
   const [service, setService] = useState({});
   const [dateMs, setDateMs] = useState(null);
   const [datePickerPopoverOpen, setDatePickerPopoverOpen] = useState(false);
@@ -36,7 +38,7 @@ const UpdateServicePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const form = e.target;
@@ -53,7 +55,27 @@ const UpdateServicePage = () => {
       email: data.get("email").trim(),
     };
 
-    console.log(formData);
+    try {
+      const { data: res } = await axios.put(
+        `http://localhost:3000/update/${params.id}`,
+        formData,
+      );
+      // console.log(res);
+      toast.custom(() => (
+        <SuccessSonner
+          title={res.success === true && "Success"}
+          description={res.message}
+        />
+      ));
+      navigate(`/my-services`);
+    } catch (err) {
+      console.error(err);
+      toast.custom(() => (
+        <DangerSonner title={err.name} description={err.message} />
+      ));
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -67,13 +89,15 @@ const UpdateServicePage = () => {
         setCategory(data.category);
         setDateMs(data.pickup_date);
         setError(null);
-        console.log("Initial Fetch", data);
+        // console.log("Initial Fetch", data);
       } catch (err) {
         console.error(err);
         setError(err);
         toast.custom(() => (
           <DangerSonner title={err.name} description={err.message} />
         ));
+        form.reset();
+        navigate(`/services/${params.id}`);
       } finally {
         setLoading(false);
       }
