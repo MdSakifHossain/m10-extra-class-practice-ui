@@ -57,7 +57,7 @@ const CreateServicePage = () => {
         `http://localhost:3000/services`,
         formData,
       );
-      console.log(res);
+      // console.log(res);
       // Green signal to go on
       toast.custom(() => (
         <SuccessSonner
