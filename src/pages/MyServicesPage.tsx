@@ -1,18 +1,15 @@
 // @ts-nocheck
 
 import DangerAlert from "@/components/app/alerts/DangerAlert";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import Loading from "@/components/app/feedback/Loading";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  // TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,12 +17,52 @@ import {
 import { Button } from "@/components/ui/button";
 import { PenLine, Trash2 } from "lucide-react";
 import { Link } from "react-router";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
+import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 
 const MyServicesPage = () => {
   const { user } = useAuth();
   const [myServices, setMyServices] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false); // for delete dialogue
+  const [targetId, setTargetId] = useState(null); // to track the item which will be deleted
+
+  const deleteThisShit = async (id) => {
+    if (!id) return console.error(`id doesn't exists`);
+
+    try {
+      await axios.delete(`http://localhost:3000/services/${id}`);
+      toast.custom(() => (
+        <SuccessSonner title="Service Deleted Successfully" />
+      ));
+    } catch (err) {
+      console.error(err);
+      toast.custom(() => <DangerSonner title="Internal Server Error" />);
+    }
+  };
+
+  const openDeleteDialogue = (id) => {
+    setTargetId(id);
+    setDeleteAlertOpen(true);
+  };
+
+  const handleDelete = () => {
+    deleteThisShit(targetId);
+    setDeleteAlertOpen(false);
+    setTargetId(null);
+  };
 
   useEffect(() => {
     const doTheThing = async () => {
@@ -92,6 +129,30 @@ const MyServicesPage = () => {
     <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-12">
       <h3 className="text-4xl font-medium">MyServices Page</h3>
 
+      <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel size="lg" variant="outline">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleDelete()}
+              size="lg"
+              variant="destructive"
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Table */}
       <Table className="text-lg">
         <TableCaption className="text-lg">
           A list of your recent Posts
@@ -127,26 +188,23 @@ const MyServicesPage = () => {
                     size="lg"
                     variant="outline"
                   >
-                    Edit <PenLine />
+                    <PenLine className="size-4" />
+                    Edit
                   </Button>
                 </Link>
                 <Button
                   className="flex items-center justify-center gap-2 px-4"
-                  size="icon-lg"
-                  variant="destructive"
+                  size="lg"
+                  variant="outline"
+                  onClick={() => openDeleteDialogue(service._id)}
                 >
-                  <Trash2 className="size-5" />
+                  <Trash2 className="size-4" />
+                  Delete
                 </Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        {/* <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter> */}
       </Table>
     </div>
   );
