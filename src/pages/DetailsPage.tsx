@@ -2,11 +2,10 @@
 
 import DangerAlert from "@/components/app/alerts/DangerAlert";
 import Loading from "@/components/app/feedback/Loading";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
+import { notify } from "@/lib/notify";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { toast } from "sonner";
 
 const DetailsPage = () => {
   const { id: productID } = useParams();
@@ -27,14 +26,12 @@ const DetailsPage = () => {
     const doTheTHing = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/services/${productID}`
+          `http://localhost:3000/services/${productID}`,
         );
         setDetails(data);
       } catch (err) {
         setError(err);
-        toast.custom(() => (
-          <DangerSonner title={err.code} description={err.message} />
-        ));
+        notify.danger({ title: err.code, description: err.message });
       } finally {
         setLoading(false);
       }

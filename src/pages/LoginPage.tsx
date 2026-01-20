@@ -23,11 +23,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "react-router";
 import { useNavigate } from "react-router";
-import { toast } from "sonner";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import GoogleSignInButton from "@/components/app/auth/GoogleSignInButton";
+import { notify } from "@/lib/notify";
 
 const LoginPage = () => {
   const { signInUser } = useAuth();
@@ -53,15 +51,13 @@ const LoginPage = () => {
 
       form.reset();
       navigate(goingTo, { replace: true });
-      toast.custom(() => <SuccessSonner title="Login Successful" />);
+      notify.success({ title: "Login Successful" });
     } catch (err) {
       console.error(err);
-      toast.custom(() => (
-        <DangerSonner
-          title="Login Failed"
-          description="Look into the Console"
-        />
-      ));
+      notify.danger({
+        title: "Login Failed",
+        description: "Look into the Console",
+      });
     } finally {
       setIsSubmitting(false);
     }

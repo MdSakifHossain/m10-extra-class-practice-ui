@@ -1,12 +1,12 @@
 // @ts-nocheck
 
 import DangerAlert from "@/components/app/alerts/DangerAlert";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import ProductCard from "@/components/app/features/ProductCard";
 import Loading from "@/components/app/feedback/Loading";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { notify } from "@/lib/notify";
 
 const Homepage = () => {
   const { site_title, popular_items_limit } = useAppConfig();
@@ -23,9 +23,7 @@ const Homepage = () => {
       } catch (err) {
         console.error(err);
         setError(err);
-        toast.custom(() => (
-          <DangerSonner title={err.message} description={err.code} />
-        ));
+        notify.danger({ title: err.message, description: err.code });
       } finally {
         setLoading(false);
       }

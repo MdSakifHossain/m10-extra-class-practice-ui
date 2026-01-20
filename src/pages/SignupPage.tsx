@@ -17,11 +17,9 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation, useNavigate } from "react-router";
-import { toast } from "sonner";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
 import GoogleSignInButton from "@/components/app/auth/GoogleSignInButton";
+import { notify } from "@/lib/notify";
 
 const SignupPage = () => {
   const { createUser, updateUserProfile } = useAuth();
@@ -45,12 +43,10 @@ const SignupPage = () => {
 
     // full name validation
     if (!formData.fullName) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Full name missing"
-          description="Please provide your full name"
-        />
-      ));
+      notify.danger({
+        title: "Full name missing",
+        description: "Please provide your full name",
+      });
       return;
     }
 
@@ -61,83 +57,70 @@ const SignupPage = () => {
       return EMAIL_REGEX.test(email.trim());
     };
     if (!isValidEmail(formData.email)) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description="Provide a valid email address"
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description: "Provide a valid email address",
+      });
       return;
     }
 
     // password validation for eithr both of them are same or not
     if (formData.password !== formData.confirmPassword) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description="Both Passwords didn't Matched"
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description: "Both Passwords didn't Matched",
+      });
       return;
     }
 
     // password validatin with min length
     const minPassLength = 6;
     if (formData.password.length < minPassLength) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description={`Password must be at least ${minPassLength} Char Long`}
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description: `Password must be at least ${minPassLength} Char Long`,
+      });
       return;
     }
 
     // password validation for lowercase
     const regexLower = /^(?=.*[a-z]).+$/;
     if (!regexLower.test(formData.password)) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description="Password must contain at least one Lowercase Char"
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description: `Password must contain at least one Lowercase Char`,
+      });
       return;
     }
 
     // password validation with uppercase
     const regexUpper = /^(?=.*[A-Z]).+$/;
     if (!regexUpper.test(formData.password)) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description="Password must contain at least one Uppercase Char"
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description: "Password must contain at least one Uppercase Char",
+      });
       return;
     }
 
     // passwrod validation with numaric
     const regexNum = /(?=.*\d)/;
     if (!regexNum.test(formData.password)) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description="Password must contain at least one Numaric Char"
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description: "Password must contain at least one Numaric Char",
+      });
       return;
     }
 
     // password validation with non alpha numaric
     const specialCharRegex = /^(?=.*[\^$*.\[\]{}()?"!@#%&/\\,><':;|_~]).+$/;
     if (!specialCharRegex.test(formData.password)) {
-      toast.custom(() => (
-        <DangerSonner
-          title="Validation Error"
-          description="Password must contain at least one Non Alpha Numaric Char"
-        />
-      ));
+      notify.danger({
+        title: "Validation Error",
+        description:
+          "Password must contain at least one Non Alpha Numaric Char",
+      });
       return;
     }
 
@@ -153,12 +136,10 @@ const SignupPage = () => {
       form.reset();
 
       // show a success message
-      toast.custom(() => (
-        <SuccessSonner
-          title="Success"
-          description="Account has been created Successfully"
-        />
-      ));
+      notify.success({
+        title: "Success",
+        description: "Account has been created Successfully",
+      });
 
       navigate(goingTo, { replace: true });
     } catch (err) {

@@ -1,11 +1,9 @@
 // @ts-nocheck
 import { Button } from "@/components/ui/button";
-import { redirect, useNavigate } from "react-router";
-import { toast } from "sonner";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
+import { useNavigate } from "react-router";
 
 import { useAuth } from "@/contexts/authContext/AuthProvider";
+import { notify } from "@/lib/notify";
 
 const GoogleSignInButton = ({ redirectTo = "" }) => {
   const navigate = useNavigate();
@@ -17,15 +15,13 @@ const GoogleSignInButton = ({ redirectTo = "" }) => {
     try {
       await signInWithGoogle();
       navigate(redirectTo || "/", { replace: true });
-      toast.custom(() => <SuccessSonner title="Login Successful" />);
+      notify.success({ title: "Login Successful" });
     } catch (err) {
       console.error(err);
-      toast.custom(() => (
-        <DangerSonner
-          title="Login Failed"
-          description="Look into the Console"
-        />
-      ));
+      notify.danger({
+        title: "Login Failed",
+        description: "Look into the Console",
+      });
     }
   };
 

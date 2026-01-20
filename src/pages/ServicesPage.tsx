@@ -2,11 +2,10 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import DangerAlert from "@/components/app/alerts/DangerAlert";
 import Loading from "@/components/app/feedback/Loading";
 import ProductCard from "@/components/app/features/ProductCard";
+import { notify } from "@/lib/notify";
 
 const ServicesPage = () => {
   const [services, setServices] = useState([]);
@@ -21,10 +20,7 @@ const ServicesPage = () => {
         setError(null);
       } catch (err) {
         setError(err);
-
-        toast.custom(() => (
-          <DangerSonner title={err.message} description={err.code} />
-        ));
+        notify.danger({ title: err.message, description: err.code });
       } finally {
         setLoading(false);
       }

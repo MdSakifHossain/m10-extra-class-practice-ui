@@ -19,8 +19,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
-import { toast } from "sonner";
 import {
   Popover,
   PopoverContent,
@@ -65,6 +63,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { notify } from "@/lib/notify";
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
@@ -76,7 +75,7 @@ const Navbar = () => {
   const handleLogout = () => {
     signOutUser();
     navigate("/login");
-    toast.custom(() => <SuccessSonner title="Logout Successful" />);
+    notify.success({ title: "Logout Successful" });
   };
 
   const shortcuts = {

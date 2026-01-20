@@ -27,9 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
+import { notify } from "@/lib/notify";
 
 const MyServicesPage = () => {
   const { user } = useAuth();
@@ -44,12 +42,10 @@ const MyServicesPage = () => {
 
     try {
       await axios.delete(`http://localhost:3000/services/${id}`);
-      toast.custom(() => (
-        <SuccessSonner title="Service Deleted Successfully" />
-      ));
+      notify.success({ title: "Service Deleted Successfully" });
     } catch (err) {
       console.error(err);
-      toast.custom(() => <DangerSonner title="Internal Server Error" />);
+      notify.danger({ title: "Internal Server Error" });
     }
   };
 
@@ -75,9 +71,7 @@ const MyServicesPage = () => {
       } catch (err) {
         console.error(err);
         setError(err);
-        toast.custom(() => (
-          <DangerSonner title={err.message} description={err.code} />
-        ));
+        notify.danger({ title: err.message, description: err.code });
       } finally {
         setLoading(false);
       }

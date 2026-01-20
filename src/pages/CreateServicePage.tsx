@@ -15,16 +15,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { toast } from "sonner";
 import axios from "axios";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
 import MarkerText from "@/components/app/appearance/MarkerText";
 import { useNavigate } from "react-router";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import Loading from "@/components/app/feedback/Loading";
 import { todayMs, formatDateFromMs } from "@/lib/date";
+import { notify } from "@/lib/notify";
 
 const CreateServicePage = () => {
   const [dateMs, setDateMs] = useState(() => todayMs());
@@ -59,20 +57,15 @@ const CreateServicePage = () => {
       );
       // console.log(res);
       // Green signal to go on
-      toast.custom(() => (
-        <SuccessSonner
-          title={res.success === true && `Service Created Successfully 🥳`}
-          description={res.message}
-        />
-      ));
-
+      notify.success({
+        title: res.success === true && `Service Created Successfully 🥳`,
+        description: res.message,
+      });
       form.reset();
       navigate("/services");
     } catch (err) {
       console.error(err);
-      toast.custom(() => (
-        <DangerSonner title={err.name} description={err.message} />
-      ));
+      notify.success({ title: err.name, description: err.message });
     } finally {
       setLoading(false);
     }

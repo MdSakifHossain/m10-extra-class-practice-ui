@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 import DangerAlert from "@/components/app/alerts/DangerAlert";
-import DangerSonner from "@/components/app/alerts/sonners/DangerSonner";
 import MarkerText from "@/components/app/appearance/MarkerText";
 import Loading from "@/components/app/feedback/Loading";
 import { Button } from "@/components/ui/button";
@@ -23,9 +22,8 @@ import axios from "axios";
 import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { toast } from "sonner";
 import { formatDateFromMs } from "@/lib/date";
-import SuccessSonner from "@/components/app/alerts/sonners/SuccessSonner";
+import { notify } from "@/lib/notify";
 
 const UpdateServicePage = () => {
   const { user } = useAuth();
@@ -61,18 +59,14 @@ const UpdateServicePage = () => {
         formData,
       );
       // console.log(res);
-      toast.custom(() => (
-        <SuccessSonner
-          title={res.success === true && "Success"}
-          description={res.message}
-        />
-      ));
+      notify.success({
+        title: res.success === true && "Success",
+        description: res.message,
+      });
       navigate(`/my-services`);
     } catch (err) {
       console.error(err);
-      toast.custom(() => (
-        <DangerSonner title={err.name} description={err.message} />
-      ));
+      notify.danger({ title: err.name, description: err.message });
     } finally {
       setLoading(false);
     }
@@ -93,9 +87,7 @@ const UpdateServicePage = () => {
       } catch (err) {
         console.error(err);
         setError(err);
-        toast.custom(() => (
-          <DangerSonner title={err.name} description={err.message} />
-        ));
+        notify.danger({ title: err.name, description: err.message });
         form.reset();
         navigate(`/services/${params.id}`);
       } finally {
