@@ -29,7 +29,7 @@ const Homepage = () => {
       }
     };
     doTheThing();
-  }, []);
+  }, [popularServices]);
 
   if (loading) {
     return <Loading />;
