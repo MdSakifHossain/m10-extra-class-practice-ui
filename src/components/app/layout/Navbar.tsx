@@ -94,14 +94,12 @@ const Navbar = () => {
       description: "This will delete ALL data. No going back. 💣",
       confirmText: "Reset",
       action: async () => {
-        console.log("Resetting...");
         try {
           const { data: dbRes } = await axios.post(
             "http://localhost:3000/reset",
             default_services,
           );
-          console.log(dbRes);
-          notify.success({ title: "Something Happened! 🧐" });
+          notify.success({ title: dbRes.message });
         } catch (err) {
           console.error(err);
           notify.danger({ title: err.code, description: err.message });

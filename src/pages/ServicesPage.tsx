@@ -27,7 +27,7 @@ const ServicesPage = () => {
     };
 
     fetchServices();
-  }, []);
+  }, [services]);
 
   if (loading) {
     return <Loading />;
