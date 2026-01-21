@@ -1,14 +1,8 @@
 // @ts-nocheck
 
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import { Link, useNavigate } from "react-router";
 // import { ModeToggle } from "@/components/app/appearance/mode-toggle";
-import { nav_links } from "@/constants";
+import { default_services, nav_links } from "@/constants";
 import {
   LogIn,
   LogOut,
@@ -17,6 +11,7 @@ import {
   ChevronRight,
   Circle,
   Sparkles,
+  CloudBackup,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,14 +30,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -64,6 +57,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { notify } from "@/lib/notify";
+import axios from "axios";
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
@@ -71,11 +65,51 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [shortcutDialogue, setShortcutDialogue] = useState(false);
+  const [alertDialogueOpen, setAlertDialogueOpen] = useState(false);
+  const [alertDialogueConfig, setAlertDialogueConfig] = useState({
+    title: "",
+    description: "",
+    confirmText: "",
+    action: () => {},
+  });
 
-  const handleLogout = () => {
-    signOutUser();
-    navigate("/login");
-    notify.success({ title: "Logout Successful" });
+  const openLogoutConfirmationDialogue = () => {
+    setAlertDialogueConfig({
+      title: "Log Out? 🥲",
+      description: "You'll need to sign in again.",
+      confirmText: "Logout",
+      action: () => {
+        signOutUser();
+        navigate("/login");
+        notify.success({ title: "Logout Successful" });
+        setAlertDialogueOpen(false);
+      },
+    });
+    setAlertDialogueOpen(true);
+  };
+
+  const openDatabaseResetDialogue = () => {
+    setAlertDialogueConfig({
+      title: "Reset Database?",
+      description: "This will delete ALL data. No going back. 💣",
+      confirmText: "Reset",
+      action: async () => {
+        console.log("Resetting...");
+        try {
+          const { data: dbRes } = await axios.post(
+            "http://localhost:3000/reset",
+            default_services,
+          );
+          console.log(dbRes);
+          notify.success({ title: "Something Happened! 🧐" });
+        } catch (err) {
+          console.error(err);
+          notify.danger({ title: err.code, description: err.message });
+        }
+        setAlertDialogueOpen(false);
+      },
+    });
+    setAlertDialogueOpen(true);
   };
 
   const shortcuts = {
@@ -209,9 +243,6 @@ const Navbar = () => {
 
         <Dialog open={shortcutDialogue} onOpenChange={setShortcutDialogue}>
           <DialogTrigger className="border bg-clip-padding text-sm font-medium inline-flex items-center justify-center whitespace-nowrap gap-4 rounded-full border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs h-10 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
-            {/* <Button variant="outline" size="lg" className="rounded-full">
-              <Sparkles className="size-5" /> Shortcuts
-            </Button> */}
             <Sparkles className="size-5" /> Shortcuts
           </DialogTrigger>
           <DialogContent className="border-2">
@@ -247,52 +278,68 @@ const Navbar = () => {
         </Dialog>
 
         {user ? (
-          <Popover>
-            <PopoverTrigger className="border bg-clip-padding text-sm font-medium inline-flex items-center justify-center whitespace-nowrap gap-4 rounded-full border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs h-10 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
-              <UserRound className="size-5" />
-            </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <div className="grid gap-4">
-                <div className="space-y-1.5 text-center">
-                  <p className="text-lg font-semibold">{site_title}</p>
-                  <p className="text-muted-foreground text-sm">
-                    Welcome to {site_title} — your toolkit for being and
-                    building a part of this Pet Community with ease!
-                  </p>
-                </div>
+          <>
+            <Popover>
+              <PopoverTrigger className="border bg-clip-padding text-sm font-medium inline-flex items-center justify-center whitespace-nowrap gap-4 rounded-full border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs h-10 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
+                <UserRound className="size-5" />
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <div className="grid gap-4">
+                  <div className="space-y-1.5 text-center">
+                    <p className="text-lg font-semibold">{site_title}</p>
+                    <p className="text-muted-foreground text-sm">
+                      Welcome to {site_title} — your toolkit for being and
+                      building a part of this Pet Community with ease!
+                    </p>
+                  </div>
 
-                <AlertDialog>
-                  <AlertDialogTrigger className="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&_svg:not([class*='size-'])]:size-4 justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none flex items-center gap-3 px-3.5 py-4 w-full bg-destructive/10 hover:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive dark:hover:bg-destructive/30 h-10 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => openDatabaseResetDialogue()}
+                  >
+                    Reset
+                    <CloudBackup className="size-5" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="destructive"
+                    onClick={() => openLogoutConfirmationDialogue()}
+                  >
                     Logout <LogOut className="size-4" />
-                  </AlertDialogTrigger>
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+            <AlertDialog
+              open={alertDialogueOpen}
+              onOpenChange={setAlertDialogueOpen}
+            >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {alertDialogueConfig.title}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {alertDialogueConfig.description}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
 
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you Absolutely Sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-
-                    <AlertDialogFooter>
-                      <AlertDialogCancel size="lg" variant="secondary">
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleLogout()}
-                        size="lg"
-                        variant="destructive"
-                      >
-                        Confirm
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            </PopoverContent>
-          </Popover>
+                <AlertDialogFooter>
+                  <AlertDialogCancel size="lg" variant="secondary">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => alertDialogueConfig.action()}
+                    size="lg"
+                    variant="destructive"
+                  >
+                    {alertDialogueConfig.confirmText}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </>
         ) : (
           <Link to={"/login"}>
             <Button
