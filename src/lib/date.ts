@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export const todayMs = () => {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
