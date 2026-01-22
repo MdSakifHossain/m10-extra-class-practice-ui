@@ -61,6 +61,7 @@ const Navbar = () => {
     action: () => {},
   });
   const [commandOpen, setCommandOpen] = useState(false);
+  const isLoggedIn = !!user;
 
   const openLogoutConfirmationDialogue = () => {
     setAlertDialogueConfig({
@@ -179,6 +180,7 @@ const Navbar = () => {
         label: "Create",
         icon: PlusIcon,
         shortcut: "",
+        hidden: true,
         action: () => {
           navigate("/create");
           setCommandOpen(false);
@@ -188,6 +190,7 @@ const Navbar = () => {
         label: "My Services",
         icon: ScrollText,
         shortcut: "",
+        hidden: true,
         action: () => {
           navigate("/my-services");
           setCommandOpen(false);
@@ -217,6 +220,7 @@ const Navbar = () => {
         label: "Reset",
         icon: RotateCcw,
         shortcut: "",
+        hidden: true,
         action: () => {
           openDatabaseResetDialogue();
           setCommandOpen(false);
@@ -246,6 +250,7 @@ const Navbar = () => {
         label: "Profile",
         icon: UserIcon,
         shortcut: "",
+        hidden: true,
         action: () => {
           navigate("/profile");
           setCommandOpen(false);
@@ -255,8 +260,19 @@ const Navbar = () => {
         label: "Settings",
         icon: Settings,
         shortcut: "",
+        hidden: true,
         action: () => {
           navigate("/settings");
+          setCommandOpen(false);
+        },
+      },
+      {
+        label: "Log In",
+        icon: LogIn,
+        shortcut: "",
+        allowedAfterLogin: false,
+        action: () => {
+          navigate("/login");
           setCommandOpen(false);
         },
       },
@@ -264,6 +280,7 @@ const Navbar = () => {
         label: "Logout",
         icon: LogOut,
         shortcut: "",
+        hidden: true,
         action: () => {
           openLogoutConfirmationDialogue();
           setCommandOpen(false);
@@ -272,8 +289,18 @@ const Navbar = () => {
     ],
   };
 
+  const filterCommands = (items) => {
+    // USER IS LOGGED IN
+    if (isLoggedIn)
+      return items.filter((item) => item.allowedAfterLogin !== false);
+
+    // USER IS LOGGED OUT
+    if (!isLoggedIn) return items.filter((item) => item.hidden !== true);
+  };
+
   return (
     <>
+      {/* Visible content */}
       <div className="flex items-center justify-between px-5 py-3 lg:px-24 lg:py-4 border-b">
         <Link
           to={"/"}
@@ -309,28 +336,34 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Invisible content */}
       {/* Command Palette */}
       <CommandDialog open={commandOpen} onOpenChange={setCommandOpen}>
         <Command>
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>
             <CommandEmpty>No results found</CommandEmpty>
+
             <CommandGroup heading="Navigation">
-              {commandPaletteObj.navigation.map((item, index) => (
-                <CommandItem key={index} onSelect={item.action}>
-                  <item.icon />
-                  <span>{item.label}</span>
-                  {item.shortcut && (
-                    <CommandShortcut>
-                      <Kbd>{item.shortcut}</Kbd>
-                    </CommandShortcut>
-                  )}
-                </CommandItem>
-              ))}
+              {filterCommands(commandPaletteObj.navigation).map(
+                (item, index) => (
+                  <CommandItem key={index} onSelect={item.action}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                    {item.shortcut && (
+                      <CommandShortcut>
+                        <Kbd>{item.shortcut}</Kbd>
+                      </CommandShortcut>
+                    )}
+                  </CommandItem>
+                ),
+              )}
             </CommandGroup>
+
             <CommandSeparator />
+
             <CommandGroup heading="Actions">
-              {commandPaletteObj.actions.map((item, index) => (
+              {filterCommands(commandPaletteObj.actions).map((item, index) => (
                 <CommandItem key={index} onSelect={item.action}>
                   <item.icon />
                   <span>{item.label}</span>
@@ -342,9 +375,11 @@ const Navbar = () => {
                 </CommandItem>
               ))}
             </CommandGroup>
+
             <CommandSeparator />
+
             <CommandGroup heading="Account">
-              {commandPaletteObj.account.map((item, index) => (
+              {filterCommands(commandPaletteObj.account).map((item, index) => (
                 <CommandItem key={index} onSelect={item.action}>
                   <item.icon />
                   <span>{item.label}</span>
