@@ -312,30 +312,15 @@ const Navbar = () => {
         <div className="flex items-center gap-1.5 lg:gap-3">
           <ModeToggle className="hidden sm:flex" />
 
-          {user ? (
-            <Button
-              onClick={() => setCommandOpen(true)}
-              size="icon-lg"
-              variant="ghost"
-              className="rounded-full"
-              title="Ctrl + K"
-            >
-              <img
-                src="/command-palette.svg"
-                alt="command-palette dark:invert"
-              />
-            </Button>
-          ) : (
-            <Link to={"/login"}>
-              <Button
-                size={"lg"}
-                variant={"outline"}
-                className="flex items-center gap-3 lg:px-3.5 lg:py-4 rounded-lg rounded-e-4xl"
-              >
-                <LogIn className="size-4" /> Login
-              </Button>
-            </Link>
-          )}
+          <Button
+            onClick={() => setCommandOpen(true)}
+            size="icon-lg"
+            variant="ghost"
+            className="rounded-full"
+            title="Ctrl + K"
+          >
+            <img src="/command-palette.svg" alt="command-palette dark:invert" />
+          </Button>
         </div>
       </div>
 
