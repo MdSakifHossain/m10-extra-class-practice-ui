@@ -5,7 +5,7 @@ import Loading from "@/components/app/feedback/Loading";
 import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/notify";
 import axios from "axios";
-import { ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {
@@ -17,14 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { formatDate } from "@/lib/date";
 
 const DetailsPage = () => {
@@ -33,12 +25,7 @@ const DetailsPage = () => {
   const [details, setDetails] = useState({});
   const [error, setError] = useState(null);
   const [orderDialogueStatus, setOrderDialogueStatus] = useState(false);
-
-  const countries = [
-    { label: "United States", value: "us" },
-    { label: "United Kingdom", value: "uk" },
-    { label: "Canada", value: "ca" },
-  ];
+  const [quantity, setQuantity] = useState(1);
 
   const handleOrder = (e) => {
     e.preventDefault();
@@ -60,7 +47,7 @@ const DetailsPage = () => {
       }
     };
     doTheTHing();
-  }, []);
+  }, [productID]);
 
   if (loading) {
     return <Loading />;
@@ -109,60 +96,94 @@ const DetailsPage = () => {
       <Dialog open={orderDialogueStatus} onOpenChange={setOrderDialogueStatus}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>Order Form</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              Make Sure to fill in all the Fields.
             </DialogDescription>
           </DialogHeader>
 
           <form className="w-full max-w-sm" onSubmit={(e) => handleOrder(e)}>
             <FieldGroup>
-              {/* Name */}
+              {/* Product Name */}
               <Field>
-                <FieldLabel htmlFor="form-name">Name</FieldLabel>
-                <Input id="form-name" type="text" placeholder="Product Name" />
+                <FieldLabel htmlFor="product-name">Product Name</FieldLabel>
+                <Input
+                  id="product-name"
+                  type="text"
+                  placeholder="Product Name"
+                />
+              </Field>
+
+              {/* Buyer Name */}
+              <Field>
+                <FieldLabel htmlFor="buyer-name">Buyer Name</FieldLabel>
+                <Input id="buyer-name" type="text" placeholder="Buyer Name" />
+              </Field>
+
+              {/* Product Price */}
+              <Field>
+                <FieldLabel htmlFor="product-price">Price</FieldLabel>
+                <Input id="product-price" type="number" placeholder="Price" />
+              </Field>
+
+              {/* Quantity Big number */}
+              <Field>
+                <FieldLabel htmlFor="quantity">Quantity</FieldLabel>
+
+                <div className="flex gap-2.5 items-center">
+                  <Button
+                    size="icon-lg"
+                    variant="default"
+                    className="rounded-full"
+                    onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                    disabled={quantity <= 1}
+                  >
+                    <Minus className="size-4" />
+                  </Button>
+
+                  <span className="flex-1 flex items-center justify-center text-6xl">
+                    {quantity}
+                  </span>
+
+                  <Button
+                    size="icon-lg"
+                    variant="default"
+                    className="rounded-full"
+                    onClick={() => setQuantity((prev) => prev + 1)}
+                  >
+                    <Plus className="size-4" />
+                  </Button>
+                </div>
+              </Field>
+
+              {/* Quantity Input field */}
+              <Field>
+                <Input
+                  id="quantity"
+                  type="number"
+                  placeholder="Quantity"
+                  min={1}
+                  value={quantity === 0 ? "" : quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value) || 0)}
+                />
+              </Field>
+
+              {/* Address */}
+              <Field>
+                <FieldLabel htmlFor="form-address">Address</FieldLabel>
+                <Input id="form-address" type="text" placeholder="Address" />
+              </Field>
+
+              {/* Phone Number */}
+              <Field>
+                <FieldLabel htmlFor="form-phone">Phone</FieldLabel>
+                <Input id="form-phone" type="tel" placeholder="Phone" />
               </Field>
 
               {/* Email */}
               <Field>
                 <FieldLabel htmlFor="form-email">Email</FieldLabel>
                 <Input id="form-email" type="email" placeholder="Email" />
-              </Field>
-
-              {/* Grid of 2 */}
-              <div className="grid grid-cols-2 gap-4">
-                <Field>
-                  <FieldLabel htmlFor="form-phone">Phone</FieldLabel>
-                  <Input id="form-phone" type="tel" placeholder="Phone" />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="form-country">Country</FieldLabel>
-                  <Select items={countries} defaultValue="us">
-                    <SelectTrigger id="form-country">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {countries.map((country) => (
-                          <SelectItem key={country.value} value={country.value}>
-                            {country.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-
-              {/* Address */}
-              <Field>
-                <FieldLabel htmlFor="form-address">Address</FieldLabel>
-                <Input
-                  id="form-address"
-                  type="text"
-                  placeholder="123 Main St"
-                />
               </Field>
 
               {/* Buttons */}
