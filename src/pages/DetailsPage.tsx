@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatDate } from "@/lib/date";
 
 const DetailsPage = () => {
   const { id: productID } = useParams();
@@ -42,15 +43,6 @@ const DetailsPage = () => {
   const handleOrder = (e) => {
     e.preventDefault();
     console.log("form-submition-initiated");
-  };
-
-  const formatDate = (gibberish) => {
-    const date = new Date(gibberish);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "short" });
-    const year = date.getFullYear();
-
-    return `${day} ${month}, ${year}`;
   };
 
   useEffect(() => {
