@@ -15,7 +15,6 @@ import {
   UserIcon,
   Contrast,
   RotateCcw,
-  CommandIcon,
   Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -316,11 +315,15 @@ const Navbar = () => {
           {user ? (
             <Button
               onClick={() => setCommandOpen(true)}
-              size="lg"
+              size="icon-lg"
               variant="ghost"
               className="rounded-full"
+              title="Ctrl + K"
             >
-              <CommandIcon className="size-5" />
+              <img
+                src="/command-palette.svg"
+                alt="command-palette dark:invert"
+              />
             </Button>
           ) : (
             <Link to={"/login"}>
