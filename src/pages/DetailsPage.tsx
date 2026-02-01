@@ -7,7 +7,7 @@ import { notify } from "@/lib/notify";
 import axios from "axios";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,7 @@ const DetailsPage = () => {
   const [error, setError] = useState(null);
   const [orderDialogueStatus, setOrderDialogueStatus] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
   const handleOrder = async (e) => {
     e.preventDefault();
@@ -56,10 +57,15 @@ const DetailsPage = () => {
         "http://localhost:3000/orders",
         formData,
       );
+      setOrderDialogueStatus(false);
       notify.success({ description: apiRes.message });
+      navigate("/services");
     } catch (err) {
-      setError(err);
-      notify.danger({ title: err.code, description: err.message });
+      const error = err.response.data;
+      notify.danger({
+        title: `${error.count} Error`,
+        description: `${error.error_message}`,
+      });
     } finally {
       setLoading(false);
     }
