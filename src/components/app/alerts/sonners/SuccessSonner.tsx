@@ -17,7 +17,7 @@ const SuccessSonner = ({ title = "", description = "" }) => {
       </Alert> 
       */}
 
-      <Alert className="font-poppins border-green-500 bg-background dark:bg-muted text-green-500 rounded-none border-0 border-l-8 md:min-w-md select-none">
+      <Alert className="font-sans border-green-500 bg-background dark:bg-muted text-green-500 rounded-none border-0 border-l-8 md:min-w-md select-none">
         <CircleCheck className="size-5" />
         <AlertTitle className="text-base">{title}</AlertTitle>
         <AlertDescription>{description}</AlertDescription>
