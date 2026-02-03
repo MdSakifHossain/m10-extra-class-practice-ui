@@ -132,13 +132,13 @@ const MyServicesPage = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel size="lg" variant="outline">
+            <AlertDialogCancel size="lg" variant="ghost">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleDelete()}
               size="lg"
-              variant="destructive"
+              variant="default"
             >
               Continue
             </AlertDialogAction>
@@ -178,7 +178,7 @@ const MyServicesPage = () => {
               <TableCell className="flex items-center justify-end gap-8 pe-8">
                 <Link to={`/update-service/${service._id}`}>
                   <Button
-                    className="flex items-center justify-center gap-2 px-4 rounded-full"
+                    className="flex items-center justify-center gap-2 px-4"
                     size="lg"
                     variant="outline"
                   >
@@ -189,10 +189,10 @@ const MyServicesPage = () => {
                 <Button
                   className="flex items-center justify-center gap-2 px-4"
                   size="lg"
-                  variant="outline"
+                  variant="default"
                   onClick={() => openDeleteDialogue(service._id)}
                 >
-                  <Trash2 className="size-4" />
+                  <Trash2 className="size-5" />
                   Delete
                 </Button>
               </TableCell>
