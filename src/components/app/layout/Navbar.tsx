@@ -16,6 +16,7 @@ import {
   Contrast,
   RotateCcw,
   Settings,
+  SquareRoundCorner,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -192,6 +193,16 @@ const Navbar = () => {
         hidden: true,
         action: () => {
           navigate("/my-services");
+          setCommandOpen(false);
+        },
+      },
+      {
+        label: "My Orders",
+        icon: SquareRoundCorner,
+        shortcut: "",
+        hidden: true,
+        action: () => {
+          navigate("/my-orders");
           setCommandOpen(false);
         },
       },

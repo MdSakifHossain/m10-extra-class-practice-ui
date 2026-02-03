@@ -12,6 +12,7 @@ import ServicesPage from "@/pages/ServicesPage";
 import DetailsPage from "@/pages/DetailsPage";
 import MyServicesPage from "@/pages/MyServicesPage";
 import UpdateServicePage from "@/pages/UpdateServicePage";
+import MyOrdersPage from "@/pages/MyOrdersPage";
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +72,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivatePage>
             <UpdateServicePage />
+          </PrivatePage>
+        ),
+      },
+      {
+        path: "my-orders",
+        element: (
+          <PrivatePage>
+            <MyOrdersPage />
           </PrivatePage>
         ),
       },
