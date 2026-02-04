@@ -10,6 +10,7 @@ import {
   AppConfigProvider,
   useAppConfig,
 } from "@/contexts/appConfig/AppConfigProvider";
+import CommandPalette from "@/components/app/overlays/CommandPalette";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const InnerApp = () => {
     <>
       {cursor && <GhostCursor className="bg-primary!" />}
       <Toaster position="top-right" />
+      <CommandPalette />
       <div className="min-h-svh flex flex-col">
         <Navbar />
         <div className="flex-1 py-10 flex flex-col">
