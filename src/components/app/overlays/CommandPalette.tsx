@@ -261,7 +261,6 @@ const CommandPalette = () => {
         signOutUser();
         navigate("/login");
         notify.success({ title: "Logout Successful" });
-        setAlertDialogueOpen(false);
       },
     });
     setAlertDialogueOpen(true);
@@ -283,7 +282,6 @@ const CommandPalette = () => {
           console.error(err);
           notify.danger({ title: err.code, description: err.message });
         }
-        setAlertDialogueOpen(false);
       },
     });
     setAlertDialogueOpen(true);

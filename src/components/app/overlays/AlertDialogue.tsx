@@ -35,6 +35,7 @@ const AlertDialogue = () => {
             <AlertDialogAction
               onClick={() => {
                 alertDialogueConfig.action();
+                setAlertDialogueOpen(false);
               }}
               size="lg"
               variant="destructive"
