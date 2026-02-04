@@ -34,16 +34,7 @@ import {
 import { default_services } from "@/constants";
 import { useNavigate } from "react-router";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import axios from "axios";
 
 const CommandPalette = () => {
   const [commandOpen, setCommandOpen] = useState(false);
@@ -51,13 +42,7 @@ const CommandPalette = () => {
   const isLoggedIn = !!user;
   const navigate = useNavigate();
   const { setCursor, setTheme } = useAppConfig();
-  const [alertDialogueConfig, setAlertDialogueConfig] = useState({
-    title: "",
-    description: "",
-    confirmText: "",
-    action: () => {},
-  });
-  const [alertDialogueOpen, setAlertDialogueOpen] = useState(false);
+  const { setAlertDialogueOpen, setAlertDialogueConfig } = useAppConfig();
 
   const filterCommands = (items) => {
     // USER IS LOGGED IN
@@ -363,31 +348,6 @@ const CommandPalette = () => {
           </CommandList>
         </Command>
       </CommandDialog>
-
-      {/* Alert Dialogue */}
-      <AlertDialog open={alertDialogueOpen} onOpenChange={setAlertDialogueOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{alertDialogueConfig.title}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {alertDialogueConfig.description}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-
-          <AlertDialogFooter>
-            <AlertDialogCancel size="lg" variant="secondary">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => alertDialogueConfig.action()}
-              size="lg"
-              variant="destructive"
-            >
-              {alertDialogueConfig.confirmText}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 };

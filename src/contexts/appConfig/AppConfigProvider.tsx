@@ -6,10 +6,22 @@ import { createContext, useContext, useState, useEffect } from "react";
 const ConfigContext = createContext({});
 
 export const AppConfigProvider = ({ children }) => {
-  // Theme — persistent
+  // =-=-=-=-=-=-= [ States ] =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("vite-ui-theme");
     return saved || AppConfig.fallbacks.defaultTheme;
+  });
+  const [cursor, setCursor] = useState(() => {
+    const saved = localStorage.getItem("global-cursor");
+    return saved ? JSON.parse(saved) : AppConfig.fallbacks.defaultCursor;
+  });
+  // Alert Dialogue
+  const [alertDialogueOpen, setAlertDialogueOpen] = useState(false);
+  const [alertDialogueConfig, setAlertDialogueConfig] = useState({
+    title: "",
+    description: "",
+    confirmText: "",
+    action: () => {},
   });
 
   useEffect(() => {
@@ -18,12 +30,6 @@ export const AppConfigProvider = ({ children }) => {
     root.classList.add(theme);
     localStorage.setItem("vite-ui-theme", theme);
   }, [theme]);
-
-  // Cursor — persistent
-  const [cursor, setCursor] = useState(() => {
-    const saved = localStorage.getItem("global-cursor");
-    return saved ? JSON.parse(saved) : AppConfig.fallbacks.defaultCursor;
-  });
 
   useEffect(() => {
     localStorage.setItem("global-cursor", JSON.stringify(cursor));
@@ -36,6 +42,10 @@ export const AppConfigProvider = ({ children }) => {
     setTheme,
     cursor,
     setCursor,
+    alertDialogueOpen,
+    setAlertDialogueOpen,
+    alertDialogueConfig,
+    setAlertDialogueConfig,
   };
 
   return (

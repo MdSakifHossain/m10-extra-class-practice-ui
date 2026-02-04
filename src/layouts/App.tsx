@@ -11,6 +11,7 @@ import {
   useAppConfig,
 } from "@/contexts/appConfig/AppConfigProvider";
 import CommandPalette from "@/components/app/overlays/CommandPalette";
+import AlertDialogue from "@/components/app/overlays/AlertDialogue";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const InnerApp = () => {
       {cursor && <GhostCursor className="bg-primary!" />}
       <Toaster position="top-right" />
       <CommandPalette />
+      <AlertDialogue />
       <div className="min-h-svh flex flex-col">
         <Navbar />
         <div className="flex-1 py-10 flex flex-col">
