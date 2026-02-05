@@ -41,7 +41,7 @@ const CommandPalette = () => {
   const { user, signOutUser } = useAuth();
   const isLoggedIn = !!user;
   const navigate = useNavigate();
-  const { setCursor, setTheme } = useAppConfig();
+  const { setCursor, setTheme, openAlertDialogue } = useAppConfig();
 
   const filterCommands = (items) => {
     // USER IS LOGGED IN
@@ -128,7 +128,22 @@ const CommandPalette = () => {
         shortcut: "",
         hidden: true,
         action: () => {
-          openDatabaseResetDialogue();
+          openAlertDialogue({
+            title: "Reset Database?",
+            description: "This will delete ALL data. No going back. 💣",
+            action: async () => {
+              try {
+                const { data: dbRes } = await axios.post(
+                  "http://localhost:3000/reset",
+                  default_services,
+                );
+                notify.success({ title: dbRes.message });
+              } catch (err) {
+                console.error(err);
+                notify.danger({ title: err.code, description: err.message });
+              }
+            },
+          });
           setCommandOpen(false);
         },
       },
@@ -149,24 +164,6 @@ const CommandPalette = () => {
           setCursor((prev) => !prev);
           setCommandOpen(false);
         },
-      },
-      {
-        label: "Invoke Prompt",
-        icon: CircleDot,
-        shortcut: "",
-        action: () =>
-          invokePrompt({
-            title: "Was Nadia Bitch?",
-            description:
-              "Click Continue to get the satisfaction of calling her a Bitch",
-            confirmText: "Yes",
-            action: () => {
-              notify.danger({
-                title: "khanki maagi",
-                description: "indeed she was a bitch!",
-              });
-            },
-          }),
       },
     ],
     account: [
@@ -206,7 +203,16 @@ const CommandPalette = () => {
         shortcut: "",
         hidden: true,
         action: () => {
-          openLogoutConfirmationDialogue();
+          openAlertDialogue({
+            title: "Log Out? 🥲",
+            description: "You'll need to sign in again.",
+            confirmText: "Logout",
+            action: () => {
+              signOutUser();
+              navigate("/login");
+              notify.success({ title: "Logout Successful" });
+            },
+          });
           setCommandOpen(false);
         },
       },
@@ -268,41 +274,6 @@ const CommandPalette = () => {
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
-
-  const openLogoutConfirmationDialogue = () => {
-    setAlertDialogueConfig({
-      title: "Log Out? 🥲",
-      description: "You'll need to sign in again.",
-      confirmText: "Logout",
-      action: () => {
-        signOutUser();
-        navigate("/login");
-        notify.success({ title: "Logout Successful" });
-      },
-    });
-    setAlertDialogueOpen(true);
-  };
-
-  const openDatabaseResetDialogue = () => {
-    setAlertDialogueConfig({
-      title: "Reset Database?",
-      description: "This will delete ALL data. No going back. 💣",
-      confirmText: "Reset",
-      action: async () => {
-        try {
-          const { data: dbRes } = await axios.post(
-            "http://localhost:3000/reset",
-            default_services,
-          );
-          notify.success({ title: dbRes.message });
-        } catch (err) {
-          console.error(err);
-          notify.danger({ title: err.code, description: err.message });
-        }
-      },
-    });
-    setAlertDialogueOpen(true);
-  };
 
   return (
     <>

@@ -34,8 +34,22 @@ export const AppConfigProvider = ({ children }) => {
     localStorage.setItem("global-cursor", JSON.stringify(cursor));
   }, [cursor]);
 
+  // helper for the Alert Dialogue
+  const openAlertDialogue = ({
+    title = "Are you sure?",
+    description = "This action cant be undone. So, be sure before confirming.",
+    confirmText = "Continue",
+    action = () => {
+      alert("Action is not Served");
+    },
+  }) => {
+    setAlertDialogueConfig({ title, description, confirmText, action });
+    setAlertDialogueOpen(true);
+  };
+
   const value = {
     ...AppConfig.constants,
+    openAlertDialogue,
     // Dynamic config
     theme,
     setTheme,

@@ -29,7 +29,7 @@ const AlertDialogue = () => {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel size="lg" variant="secondary">
+            <AlertDialogCancel size="lg" variant="ghost">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
@@ -38,7 +38,7 @@ const AlertDialogue = () => {
                 setAlertDialogueOpen(false);
               }}
               size="lg"
-              variant="destructive"
+              variant="default"
             >
               {alertDialogueConfig.confirmText}
             </AlertDialogAction>
