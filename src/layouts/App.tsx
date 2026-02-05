@@ -10,7 +10,7 @@ import {
   AppConfigProvider,
   useAppConfig,
 } from "@/contexts/appConfig/AppConfigProvider";
-import CommandPalette from "@/components/app/overlays/CommandPalette";
+import CommandPalette from "@/components/app/overlays/CommandPalette/CommandPalette";
 import AlertDialogue from "@/components/app/overlays/AlertDialogue";
 
 const App = () => {

@@ -14,27 +14,9 @@ import {
 } from "@/components/ui/command";
 import { Kbd } from "@/components/ui/kbd";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
-import { notify } from "@/lib/notify";
-import {
-  LogIn,
-  LogOut,
-  Tags,
-  ScrollText,
-  Send,
-  CircleDot,
-  MousePointer2,
-  HomeIcon,
-  PlusIcon,
-  UserIcon,
-  Contrast,
-  RotateCcw,
-  Settings,
-  SquareRoundCorner,
-} from "lucide-react";
-import { default_services } from "@/constants";
 import { useNavigate } from "react-router";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
-import axios from "axios";
+import { createCommandPaletteConfig } from "./CommandPaletteConfig";
 
 const CommandPalette = () => {
   const [commandOpen, setCommandOpen] = useState(false);
@@ -57,139 +39,14 @@ const CommandPalette = () => {
     setCommandOpen(false);
   };
 
-  const commandPaletteObj = {
-    navigation: [
-      {
-        label: "Home",
-        icon: HomeIcon,
-        shortcut: "",
-        action: () => runCommand(() => navigate("/")),
-      },
-      {
-        label: "Services",
-        icon: Tags,
-        shortcut: "",
-        action: () => runCommand(() => navigate("/services")),
-      },
-      {
-        label: "Create",
-        icon: PlusIcon,
-        shortcut: "",
-        hidden: true,
-        action: () => runCommand(() => navigate("/create")),
-      },
-      {
-        label: "My Services",
-        icon: ScrollText,
-        shortcut: "",
-        hidden: true,
-        action: () => runCommand(() => navigate("/my-services")),
-      },
-      {
-        label: "My Orders",
-        icon: SquareRoundCorner,
-        shortcut: "",
-        hidden: true,
-        action: () => runCommand(() => navigate("/my-orders")),
-      },
-      {
-        label: "Contact",
-        icon: Send,
-        shortcut: "",
-        action: () => runCommand(() => navigate("/contact")),
-      },
-      {
-        label: "About",
-        icon: CircleDot,
-        shortcut: "",
-        action: () => runCommand(() => navigate("/about")),
-      },
-    ],
-    actions: [
-      {
-        label: "Reset",
-        icon: RotateCcw,
-        shortcut: "",
-        hidden: true,
-        action: () =>
-          runCommand(() =>
-            openAlertDialogue({
-              title: "Reset Database?",
-              description: "This will delete ALL data. No going back. 💣",
-              action: async () => {
-                try {
-                  const { data: dbRes } = await axios.post(
-                    "http://localhost:3000/reset",
-                    default_services,
-                  );
-                  notify.success({ title: dbRes.message });
-                } catch (err) {
-                  console.error(err);
-                  notify.danger({ title: err.code, description: err.message });
-                }
-              },
-            }),
-          ),
-      },
-      {
-        label: "Dark Mode",
-        icon: Contrast,
-        shortcut: "",
-        action: () =>
-          runCommand(() =>
-            setTheme((prev) => (prev === "dark" ? "light" : "dark")),
-          ),
-      },
-      {
-        label: "Cursor",
-        icon: MousePointer2,
-        shortcut: "",
-        action: () => runCommand(() => setCursor((prev) => !prev)),
-      },
-    ],
-    account: [
-      {
-        label: "Profile",
-        icon: UserIcon,
-        shortcut: "",
-        hidden: true,
-        action: () => runCommand(() => navigate("/profile")),
-      },
-      {
-        label: "Settings",
-        icon: Settings,
-        shortcut: "",
-        hidden: true,
-        action: () => runCommand(() => navigate("/settings")),
-      },
-      {
-        label: "Log In",
-        icon: LogIn,
-        shortcut: "",
-        allowedAfterLogin: false,
-        action: () => runCommand(() => navigate("/login")),
-      },
-      {
-        label: "Logout",
-        icon: LogOut,
-        shortcut: "",
-        hidden: true,
-        action: () =>
-          runCommand(() =>
-            openAlertDialogue({
-              title: "Log Out? 🥲",
-              description: "You'll need to sign in again.",
-              confirmText: "Logout",
-              action: () => {
-                signOutUser();
-                navigate("/login");
-                notify.success({ title: "Logout Successful" });
-              },
-            }),
-          ),
-      },
-    ],
-  };
+  const commandPaletteObj = createCommandPaletteConfig({
+    runCommand,
+    navigate,
+    openAlertDialogue,
+    setTheme,
+    setCursor,
+    signOutUser,
+  });
 
   const shortcuts = {
     // if the key is just a single key
