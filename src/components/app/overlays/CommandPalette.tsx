@@ -42,7 +42,6 @@ const CommandPalette = () => {
   const isLoggedIn = !!user;
   const navigate = useNavigate();
   const { setCursor, setTheme } = useAppConfig();
-  const { setAlertDialogueOpen, setAlertDialogueConfig } = useAppConfig();
 
   const filterCommands = (items) => {
     // USER IS LOGGED IN
@@ -150,6 +149,24 @@ const CommandPalette = () => {
           setCursor((prev) => !prev);
           setCommandOpen(false);
         },
+      },
+      {
+        label: "Invoke Prompt",
+        icon: CircleDot,
+        shortcut: "",
+        action: () =>
+          invokePrompt({
+            title: "Was Nadia Bitch?",
+            description:
+              "Click Continue to get the satisfaction of calling her a Bitch",
+            confirmText: "Yes",
+            action: () => {
+              notify.danger({
+                title: "khanki maagi",
+                description: "indeed she was a bitch!",
+              });
+            },
+          }),
       },
     ],
     account: [

@@ -6,7 +6,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 const ConfigContext = createContext({});
 
 export const AppConfigProvider = ({ children }) => {
-  // =-=-=-=-=-=-= [ States ] =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("vite-ui-theme");
     return saved || AppConfig.fallbacks.defaultTheme;

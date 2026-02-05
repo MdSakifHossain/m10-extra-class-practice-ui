@@ -30,7 +30,7 @@ const InnerApp = () => {
   return (
     <>
       {cursor && <GhostCursor className="bg-primary!" />}
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       <CommandPalette />
       <AlertDialogue />
       <div className="min-h-svh flex flex-col">
