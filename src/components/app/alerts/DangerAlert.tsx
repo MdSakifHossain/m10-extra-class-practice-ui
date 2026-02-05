@@ -5,7 +5,7 @@ const DangerAlert = ({ title = "", description = "" }) => {
   return (
     <Alert
       variant="destructive"
-      className="max-w-md border-2 border-x-destructive px-6 py-7 rounded-2xl"
+      className="max-w-md border-2 border-x-destructive px-6 py-7 rounded-2xl animate-pulse"
     >
       <AlertCircleIcon className="size-6" />
       <AlertTitle className="text-lg">{title}</AlertTitle>
