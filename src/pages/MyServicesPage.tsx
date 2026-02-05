@@ -17,25 +17,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { PenLine, Trash2 } from "lucide-react";
 import { Link } from "react-router";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { notify } from "@/lib/notify";
+import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 
 const MyServicesPage = () => {
   const { user } = useAuth();
   const [myServices, setMyServices] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false); // for delete dialogue
-  const [targetId, setTargetId] = useState(null); // to track the item which will be deleted
+  const { openAlertDialogue } = useAppConfig();
 
   const deleteThisShit = async (id) => {
     if (!id) return console.error(`id doesn't exists`);
@@ -47,17 +37,6 @@ const MyServicesPage = () => {
       console.error(err);
       notify.danger({ title: "Internal Server Error" });
     }
-  };
-
-  const openDeleteDialogue = (id) => {
-    setTargetId(id);
-    setDeleteAlertOpen(true);
-  };
-
-  const handleDelete = () => {
-    deleteThisShit(targetId);
-    setDeleteAlertOpen(false);
-    setTargetId(null);
   };
 
   useEffect(() => {
@@ -123,29 +102,6 @@ const MyServicesPage = () => {
     <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-12">
       <h3 className="text-4xl font-medium">MyServices Page</h3>
 
-      <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel size="lg" variant="ghost">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => handleDelete()}
-              size="lg"
-              variant="default"
-            >
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
       {/* Table */}
       <Table className="text-lg">
         <TableCaption className="text-lg">
@@ -190,7 +146,16 @@ const MyServicesPage = () => {
                   className="flex items-center justify-center gap-2 px-4"
                   size="lg"
                   variant="default"
-                  onClick={() => openDeleteDialogue(service._id)}
+                  onClick={() => {
+                    openAlertDialogue({
+                      title: "Are you absolutely sure?",
+                      description: "This action cannot be undone",
+                      confirmText: "ChaCha",
+                      action: () => {
+                        deleteThisShit(service._id);
+                      },
+                    });
+                  }}
                 >
                   <Trash2 className="size-5" />
                   Delete
