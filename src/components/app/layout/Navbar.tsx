@@ -3,9 +3,10 @@
 import { Link } from "react-router";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import { ModeToggle } from "../appearance/mode-toggle";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
-  const { site_title } = useAppConfig();
+  const { site_title, setCommandOpen } = useAppConfig();
 
   return (
     <>
@@ -22,15 +23,15 @@ const Navbar = () => {
         <div className="flex items-center gap-1.5 lg:gap-3">
           <ModeToggle className="hidden sm:flex" />
 
-          {/* <Button
-            // onClick={() => setCommandOpen(true)}
+          <Button
+            onClick={() => setCommandOpen(true)}
             size="icon-lg"
             variant="ghost"
             className="rounded-full"
             title="Ctrl + K"
           >
             <img src="/command-palette.svg" alt="command-palette dark:invert" />
-          </Button> */}
+          </Button>
         </div>
       </div>
     </>

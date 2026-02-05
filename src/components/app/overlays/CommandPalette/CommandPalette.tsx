@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Command,
   CommandDialog,
@@ -19,11 +19,16 @@ import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import { createCommandPaletteConfig } from "./CommandPaletteConfig";
 
 const CommandPalette = () => {
-  const [commandOpen, setCommandOpen] = useState(false);
   const { user, signOutUser } = useAuth();
   const isLoggedIn = !!user;
   const navigate = useNavigate();
-  const { setCursor, setTheme, openAlertDialogue } = useAppConfig();
+  const {
+    setCursor,
+    setTheme,
+    openAlertDialogue,
+    commandOpen,
+    setCommandOpen,
+  } = useAppConfig();
 
   const filterCommands = (items) => {
     // USER IS LOGGED IN

@@ -22,6 +22,8 @@ export const AppConfigProvider = ({ children }) => {
     confirmText: "",
     action: () => {},
   });
+  // command palette
+  const [commandOpen, setCommandOpen] = useState(false);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -59,6 +61,8 @@ export const AppConfigProvider = ({ children }) => {
     setAlertDialogueOpen,
     alertDialogueConfig,
     setAlertDialogueConfig,
+    commandOpen,
+    setCommandOpen,
   };
 
   return (
