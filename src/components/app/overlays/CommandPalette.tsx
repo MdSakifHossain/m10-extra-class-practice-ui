@@ -52,73 +52,57 @@ const CommandPalette = () => {
     if (!isLoggedIn) return items.filter((item) => item.hidden !== true);
   };
 
+  const runCommand = (fn) => {
+    fn();
+    setCommandOpen(false);
+  };
+
   const commandPaletteObj = {
     navigation: [
       {
         label: "Home",
         icon: HomeIcon,
         shortcut: "",
-        action: () => {
-          navigate("/");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/")),
       },
       {
         label: "Services",
         icon: Tags,
         shortcut: "",
-        action: () => {
-          navigate("/services");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/services")),
       },
       {
         label: "Create",
         icon: PlusIcon,
         shortcut: "",
         hidden: true,
-        action: () => {
-          navigate("/create");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/create")),
       },
       {
         label: "My Services",
         icon: ScrollText,
         shortcut: "",
         hidden: true,
-        action: () => {
-          navigate("/my-services");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/my-services")),
       },
       {
         label: "My Orders",
         icon: SquareRoundCorner,
         shortcut: "",
         hidden: true,
-        action: () => {
-          navigate("/my-orders");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/my-orders")),
       },
       {
         label: "Contact",
         icon: Send,
         shortcut: "",
-        action: () => {
-          navigate("/contact");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/contact")),
       },
       {
         label: "About",
         icon: CircleDot,
         shortcut: "",
-        action: () => {
-          navigate("/about");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/about")),
       },
     ],
     actions: [
@@ -127,43 +111,40 @@ const CommandPalette = () => {
         icon: RotateCcw,
         shortcut: "",
         hidden: true,
-        action: () => {
-          openAlertDialogue({
-            title: "Reset Database?",
-            description: "This will delete ALL data. No going back. 💣",
-            action: async () => {
-              try {
-                const { data: dbRes } = await axios.post(
-                  "http://localhost:3000/reset",
-                  default_services,
-                );
-                notify.success({ title: dbRes.message });
-              } catch (err) {
-                console.error(err);
-                notify.danger({ title: err.code, description: err.message });
-              }
-            },
-          });
-          setCommandOpen(false);
-        },
+        action: () =>
+          runCommand(() =>
+            openAlertDialogue({
+              title: "Reset Database?",
+              description: "This will delete ALL data. No going back. 💣",
+              action: async () => {
+                try {
+                  const { data: dbRes } = await axios.post(
+                    "http://localhost:3000/reset",
+                    default_services,
+                  );
+                  notify.success({ title: dbRes.message });
+                } catch (err) {
+                  console.error(err);
+                  notify.danger({ title: err.code, description: err.message });
+                }
+              },
+            }),
+          ),
       },
       {
         label: "Dark Mode",
         icon: Contrast,
         shortcut: "",
-        action: () => {
-          setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-          setCommandOpen(false);
-        },
+        action: () =>
+          runCommand(() =>
+            setTheme((prev) => (prev === "dark" ? "light" : "dark")),
+          ),
       },
       {
         label: "Cursor",
         icon: MousePointer2,
         shortcut: "",
-        action: () => {
-          setCursor((prev) => !prev);
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => setCursor((prev) => !prev)),
       },
     ],
     account: [
@@ -172,49 +153,40 @@ const CommandPalette = () => {
         icon: UserIcon,
         shortcut: "",
         hidden: true,
-        action: () => {
-          navigate("/profile");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/profile")),
       },
       {
         label: "Settings",
         icon: Settings,
         shortcut: "",
         hidden: true,
-        action: () => {
-          navigate("/settings");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/settings")),
       },
       {
         label: "Log In",
         icon: LogIn,
         shortcut: "",
         allowedAfterLogin: false,
-        action: () => {
-          navigate("/login");
-          setCommandOpen(false);
-        },
+        action: () => runCommand(() => navigate("/login")),
       },
       {
         label: "Logout",
         icon: LogOut,
         shortcut: "",
         hidden: true,
-        action: () => {
-          openAlertDialogue({
-            title: "Log Out? 🥲",
-            description: "You'll need to sign in again.",
-            confirmText: "Logout",
-            action: () => {
-              signOutUser();
-              navigate("/login");
-              notify.success({ title: "Logout Successful" });
-            },
-          });
-          setCommandOpen(false);
-        },
+        action: () =>
+          runCommand(() =>
+            openAlertDialogue({
+              title: "Log Out? 🥲",
+              description: "You'll need to sign in again.",
+              confirmText: "Logout",
+              action: () => {
+                signOutUser();
+                navigate("/login");
+                notify.success({ title: "Logout Successful" });
+              },
+            }),
+          ),
       },
     ],
   };
