@@ -61,10 +61,10 @@ const DetailsPage = () => {
       notify.success({ description: apiRes.message });
       navigate("/services");
     } catch (err) {
-      console.log(err);
+      const error = err.response.data;
       notify.danger({
-        title: `${err.code}`,
-        description: `${err.message ? err.message : "Something Wrong Happened."}`,
+        title: `${error.count} Error`,
+        description: `${error.error_message || "Something Wrong Happened."}`,
       });
     } finally {
       setLoading(false);
