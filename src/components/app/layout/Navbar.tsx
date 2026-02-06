@@ -12,31 +12,12 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Visible content */}
       <div className="flex items-center justify-between px-5 py-3 lg:px-24 lg:py-4 border-b">
-        <Link
-          to={"/"}
-          className="text-xl lg:text-4xl font-medium select-none italic flex items-center gap-3"
-        >
-          <img src="/vite.svg" alt="icon" className="size-10 lg:size-16" />
-          <p className="hidden sm:block">{site_title || "site_title"}</p>
-        </Link>
+        <SiteTitleAndLogo title={site_title} />
 
         <NavLinksGroup />
 
-        <div className="flex items-center gap-1.5 lg:gap-3">
-          <ModeToggle className="hidden sm:flex" />
-
-          <Button
-            onClick={() => setCommandOpen(true)}
-            size="icon-lg"
-            variant="ghost"
-            className="rounded-full"
-            title="Ctrl + K"
-          >
-            <img src="/command-palette.svg" alt="command-palette dark:invert" />
-          </Button>
-        </div>
+        <NavbarEnding setCommandOpen={setCommandOpen} />
       </div>
     </>
   );
@@ -45,6 +26,18 @@ const Navbar = () => {
 export default Navbar;
 
 // ====================================================================
+
+function SiteTitleAndLogo({ title }) {
+  return (
+    <Link
+      to={"/"}
+      className="text-xl lg:text-4xl font-medium select-none italic flex items-center gap-3"
+    >
+      <img src="/vite.svg" alt="icon" className="size-10 lg:size-12" />
+      <p className="hidden sm:block">{title || "site_title"}</p>
+    </Link>
+  );
+}
 
 function NavLinksGroup() {
   return (
@@ -55,5 +48,23 @@ function NavLinksGroup() {
         </NavLink>
       ))}
     </ButtonGroup>
+  );
+}
+
+function NavbarEnding({ setCommandOpen }) {
+  return (
+    <div className="flex items-center gap-1.5 lg:gap-3">
+      <ModeToggle className="hidden sm:flex" />
+
+      <Button
+        onClick={() => setCommandOpen(true)}
+        size="icon-lg"
+        variant="ghost"
+        className="rounded-full"
+        title="Ctrl + K"
+      >
+        <img src="/command-palette.svg" alt="command-palette dark:invert" />
+      </Button>
+    </div>
   );
 }
