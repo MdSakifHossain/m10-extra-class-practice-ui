@@ -16,15 +16,15 @@ const Navbar = () => {
   const isLoggedIn = !!user;
 
   return (
-    <>
-      <div className="flex items-center justify-between px-5 py-3 lg:px-24 lg:py-4 border-b">
+    <div className="border-b py-2.5 lg:py-3 px-4">
+      <div className="container mx-auto flex items-center justify-between">
         <SiteTitleAndLogo title={site_title} />
 
         <NavLinksGroup navlinks={navlinks} isLoggedIn={isLoggedIn} />
 
         <NavbarEnding setCommandOpen={setCommandOpen} />
       </div>
-    </>
+    </div>
   );
 };
 
@@ -36,10 +36,10 @@ function SiteTitleAndLogo({ title }) {
   return (
     <Link
       to={"/"}
-      className="text-xl lg:text-4xl font-medium select-none italic flex items-center gap-3"
+      className="text-2xl lg:text-3xl font-medium select-none italic flex items-center"
     >
-      <img src="/vite.svg" alt="icon" className="size-10 lg:size-12" />
-      <p className="hidden sm:block">{title || "site_title"}</p>
+      <img src="/vite.svg" alt="icon" className="size-9 lg:size-12" />
+      <p>{title || "site_title"}</p>
     </Link>
   );
 }
@@ -58,7 +58,7 @@ function NavLinksGroup({ navlinks, isLoggedIn }) {
   }, [navlinks, isLoggedIn]);
 
   return (
-    <ButtonGroup>
+    <ButtonGroup className="hidden lg:block">
       {links.map((item, index) => (
         <NavLink key={index} to={item.link}>
           <Button variant="outline">
@@ -82,7 +82,7 @@ function NavbarEnding({ setCommandOpen }) {
         className="rounded-full"
         title="Ctrl + K"
       >
-        <img src="/command-palette.svg" alt="command-palette dark:invert" />
+        <img src="/command-palette.svg" alt="command-palette" />
       </Button>
     </div>
   );
