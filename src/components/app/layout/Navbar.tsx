@@ -1,9 +1,11 @@
 // @ts-nocheck
 
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
 import { ModeToggle } from "../appearance/mode-toggle";
 import { Button } from "@/components/ui/button";
+import { navlinks } from "@/constants/";
+import { ButtonGroup } from "@/components/ui/button-group";
 
 const Navbar = () => {
   const { site_title, setCommandOpen } = useAppConfig();
@@ -19,6 +21,8 @@ const Navbar = () => {
           <img src="/vite.svg" alt="icon" className="size-10 lg:size-16" />
           <p className="hidden sm:block">{site_title || "site_title"}</p>
         </Link>
+
+        <NavLinksGroup />
 
         <div className="flex items-center gap-1.5 lg:gap-3">
           <ModeToggle className="hidden sm:flex" />
@@ -41,3 +45,15 @@ const Navbar = () => {
 export default Navbar;
 
 // ====================================================================
+
+function NavLinksGroup() {
+  return (
+    <ButtonGroup>
+      {navlinks.map((item, index) => (
+        <NavLink key={index} to={item.link}>
+          <Button variant="outline">{item.text}</Button>
+        </NavLink>
+      ))}
+    </ButtonGroup>
+  );
+}
