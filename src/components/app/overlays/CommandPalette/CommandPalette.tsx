@@ -28,6 +28,7 @@ const CommandPalette = () => {
     openAlertDialogue,
     commandOpen,
     setCommandOpen,
+    setCpIcon,
   } = useAppConfig();
 
   const filterCommands = (items) => {
@@ -39,9 +40,16 @@ const CommandPalette = () => {
     if (!isLoggedIn) return items.filter((item) => item.hidden !== true);
   };
 
+  const getRandomNumber = () => Math.ceil(Math.random() * 16);
+  const changeCpIcon = () => {
+    const randomNumber = getRandomNumber().toString().padStart(2, "0");
+    setCpIcon(`/cpi/cpi${randomNumber}.svg`);
+  };
+
   const runCommand = (fn) => {
     fn();
     setCommandOpen(false);
+    changeCpIcon();
   };
 
   const commandPaletteObj = createCommandPaletteConfig({

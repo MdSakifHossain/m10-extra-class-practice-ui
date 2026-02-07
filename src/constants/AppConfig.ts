@@ -8,5 +8,6 @@ export const AppConfig = {
   fallbacks: {
     defaultTheme: "dark", // "dark" || "light"
     defaultCursor: false, // true || false
+    defaultCpIcon: "/cpi/cpi13.svg",
   },
 };

@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { TriangleAlert } from "lucide-react";
 
 const Navbar = () => {
-  const { site_title, setCommandOpen } = useAppConfig();
+  const { site_title, setCommandOpen, cpIcon } = useAppConfig();
   const { user } = useAuth();
   const isLoggedIn = !!user;
 
@@ -22,7 +22,7 @@ const Navbar = () => {
 
         <NavLinksGroup navlinks={navlinks} isLoggedIn={isLoggedIn} />
 
-        <NavbarEnding setCommandOpen={setCommandOpen} />
+        <NavbarEnding setCommandOpen={setCommandOpen} cpIcon={cpIcon} />
       </div>
     </div>
   );
@@ -70,20 +70,25 @@ function NavLinksGroup({ navlinks, isLoggedIn }) {
   );
 }
 
-function NavbarEnding({ setCommandOpen }) {
+function NavbarEnding({ setCommandOpen, cpIcon }) {
   return (
     <div className="flex items-center gap-1.5 lg:gap-3">
       <ModeToggle className="hidden sm:flex" />
-
-      <Button
-        onClick={() => setCommandOpen(true)}
-        size="icon-lg"
-        variant="ghost"
-        className="rounded-full"
-        title="Ctrl + K"
-      >
-        <img src="/command-palette.svg" alt="command-palette" />
-      </Button>
+      <CommandButton setCommandOpen={setCommandOpen} cpIcon={cpIcon} />
     </div>
+  );
+}
+
+function CommandButton({ setCommandOpen, cpIcon }) {
+  return (
+    <Button
+      onClick={() => setCommandOpen(true)}
+      size="icon-lg"
+      variant="ghost"
+      className="rounded-full"
+      title="Ctrl + K"
+    >
+      <img src={cpIcon} alt="command-palette" />
+    </Button>
   );
 }

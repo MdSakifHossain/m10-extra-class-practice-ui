@@ -24,6 +24,7 @@ export const AppConfigProvider = ({ children }) => {
   });
   // command palette
   const [commandOpen, setCommandOpen] = useState(false);
+  const [cpIcon, setCpIcon] = useState(AppConfig.fallbacks.defaultCpIcon);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -63,6 +64,8 @@ export const AppConfigProvider = ({ children }) => {
     setAlertDialogueConfig,
     commandOpen,
     setCommandOpen,
+    cpIcon,
+    setCpIcon,
   };
 
   return (
