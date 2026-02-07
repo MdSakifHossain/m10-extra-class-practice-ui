@@ -3,15 +3,15 @@ import { Link } from "react-router";
 
 const PageNotFound = () => {
   return (
-    <div className="flex-1 container mx-auto flex flex-col items-center justify-center">
-      <div className="flex-1 container mx-auto grid grid-cols-1 lg:grid-cols-2">
-        {/* Left Section: Illustration */}
-        <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-          <h2 className="mb-6 text-5xl font-semibold">Whoops!</h2>
-          <h3 className="mb-1.5 text-3xl font-semibold">
+    <div className="flex-1 container mx-auto flex flex-col items-center justify-center gap-8 lg:gap-12 px-6 lg:px-0">
+      <div className="flex-1 container mx-auto grid gap-8 grid-cols-1 lg:grid-cols-2">
+        {/* Left Section: Text */}
+        <div className="flex flex-col items-center justify-center gap-1 lg:gap-4 text-center">
+          <h2 className="text-2xl lg:text-5xl font-semibold">Woops!</h2>
+          <h3 className="text-base lg:text-3xl font-semibold">
             Something went wrong
           </h3>
-          <p className="text-muted-foreground mb-6 max-w-sm">
+          <p className="text-xs lg:text-base text-muted-foreground max-w-sm">
             The page you&apos;re looking for isn&apos;t found, we suggest you
             back to home.
           </p>
@@ -26,6 +26,7 @@ const PageNotFound = () => {
           />
         </div>
       </div>
+
       <Link to={"/"}>
         <Button
           size="lg"

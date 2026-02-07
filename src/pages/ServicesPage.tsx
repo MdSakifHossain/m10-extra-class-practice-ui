@@ -98,7 +98,7 @@ const ServicesPage = () => {
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         disabled={loading}
-        className="ms-auto w-full max-w-xs"
+        className="ms-auto w-1/2 max-w-xs"
       >
         <NativeSelectOption value="">All Items</NativeSelectOption>
         <NativeSelectOption value="pet">Pet</NativeSelectOption>

@@ -55,8 +55,8 @@ const MyOrdersPage = () => {
   }
 
   return (
-    <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-12">
-      <h3 className="text-5xl font-medium">My Orders</h3>
+    <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-4 lg:gap-12 px-6 lg:px-0">
+      <h3 className="text-3xl lg:text-5xl font-medium">My Orders</h3>
 
       <section className="w-full flex-1">
         {myOrders.length > 0 ? (
@@ -123,8 +123,8 @@ const MyOrdersPage = () => {
           </Table>
         ) : (
           <div className="flex justify-center">
-            <p className="text-xl flex items-center gap-2">
-              <CircleAlert /> No Order yet
+            <p className="text-base lg:text-xl flex items-center gap-2">
+              <CircleAlert className="size-5" /> No Order yet
             </p>
           </div>
         )}

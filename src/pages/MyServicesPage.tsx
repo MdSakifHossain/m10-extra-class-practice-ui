@@ -99,12 +99,12 @@ const MyServicesPage = () => {
   }
 
   return (
-    <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-12">
-      <h3 className="text-4xl font-medium">MyServices Page</h3>
+    <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-8 lg:gap-12 px-6 lg:px-0">
+      <h3 className="text-3xl lg:text-5xl font-medium">My Services</h3>
 
       {/* Table */}
-      <Table className="text-lg">
-        <TableCaption className="text-lg">
+      <Table className="lg:text-lg border">
+        <TableCaption className="lg:text-lg">
           A list of your recent Posts
         </TableCaption>
         <TableHeader>
@@ -131,26 +131,26 @@ const MyServicesPage = () => {
               <TableCell className="ps-12">{service.name}</TableCell>
               <TableCell className="capitalize">{service.category}</TableCell>
               <TableCell>{service.price}</TableCell>
-              <TableCell className="flex items-center justify-end gap-8 pe-8">
+              <TableCell className="flex items-center justify-end gap-4">
                 <Link to={`/update-service/${service._id}`}>
                   <Button
                     className="flex items-center justify-center gap-2 px-4"
-                    size="lg"
+                    size="icon"
                     variant="outline"
                   >
                     <PenLine className="size-4" />
-                    Edit
+                    {/* Edit */}
                   </Button>
                 </Link>
                 <Button
                   className="flex items-center justify-center gap-2 px-4"
-                  size="lg"
-                  variant="default"
+                  size="icon"
+                  variant="outline"
                   onClick={() => {
                     openAlertDialogue({
                       title: "Are you absolutely sure?",
                       description: "This action cannot be undone",
-                      confirmText: "ChaCha",
+                      confirmText: "Delete",
                       action: () => {
                         deleteThisShit(service._id);
                       },
@@ -158,7 +158,7 @@ const MyServicesPage = () => {
                   }}
                 >
                   <Trash2 className="size-5" />
-                  Delete
+                  {/* Delete */}
                 </Button>
               </TableCell>
             </TableRow>

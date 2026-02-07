@@ -64,7 +64,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-6">
+    <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 lg:px-0">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
@@ -74,7 +74,7 @@ const LoginPage = () => {
         </a>
         {/* Login form below */}
         <div className="flex flex-col gap-6">
-          <Card className="min-w-md border border-transparent dark:border-primary">
+          <Card className="lg:min-w-md border border-transparent dark:border-primary">
             <CardHeader className="text-center">
               <CardTitle className="text-xl">Welcome back</CardTitle>
               <CardDescription>Login with your Google account</CardDescription>

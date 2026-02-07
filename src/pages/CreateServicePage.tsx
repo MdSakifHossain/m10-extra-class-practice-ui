@@ -75,7 +75,7 @@ const CreateServicePage = () => {
 
   return (
     <div className="bg-background flex-1 flex flex-col gap-12 items-center justify-start p-6 md:p-10">
-      <MarkerText className="text-5xl italic font-medium">
+      <MarkerText className="text-3xl lg:text-5xl italic font-medium">
         Create Service
       </MarkerText>
 

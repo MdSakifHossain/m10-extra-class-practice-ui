@@ -150,8 +150,8 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center">
-      <Card className="min-w-md border border-transparent dark:border-primary">
+    <div className="flex-1 flex flex-col items-center justify-center px-6 lg:px-0">
+      <Card className="w-full lg:max-w-md border border-transparent dark:border-primary">
         <CardHeader>
           <CardTitle className="text-xl text-center">
             Create an account

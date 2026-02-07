@@ -72,8 +72,10 @@ const Homepage = () => {
   }
 
   return (
-    <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-12">
-      <h3 className="text-4xl font-medium">Welcome to {site_title} Inc.</h3>
+    <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-6 lg:gap-12">
+      <h3 className="text-4xl font-medium text-center">
+        Welcome to {site_title} Inc.
+      </h3>
 
       <div className="w-full flex-1 flex flex-col items-center justify-start py-4 gap-8 px-8">
         <h3 className="text-2xl font-medium">Popular Services</h3>

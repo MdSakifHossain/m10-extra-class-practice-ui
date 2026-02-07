@@ -5,7 +5,13 @@ import Loading from "@/components/app/feedback/Loading";
 import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/notify";
 import axios from "axios";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import {
+  Minus,
+  Plus,
+  ShoppingCart,
+  SpaceIcon,
+  TriangleAlert,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import {
@@ -20,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { formatDate } from "@/lib/date";
 import { useAuth } from "@/contexts/authContext/AuthProvider";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 
 const DetailsPage = () => {
   const { id: productID } = useParams();
@@ -103,37 +110,70 @@ const DetailsPage = () => {
   return (
     <>
       {/* Visible Content */}
-      <div className="container mx-auto flex-1 flex items-center justify-start flex-col gap-12 relative">
+      <div className="container mx-auto px-8 flex-1 flex items-center justify-start flex-col gap-8 lg:gap-12 relative">
         <img
           src={details.image_url}
           alt={details.name}
-          className="w-4/12 rounded-xl"
+          className="w-full lg:w-4/12 rounded-xl"
         />
 
-        <div className="border border-primary w-full p-8 text-4xl italic font-medium flex flex-col gap-8 items-start *:flex *:gap-12">
-          <p>Name: {details.name}</p>
-          <p>Category: {details.category}</p>
-          <p>Price: ${details.price}</p>
-          <p>Location: {details.location}</p>
-          <p>Pickup Date: {formatDate(details.pickup_date)}</p>
-          <p>Email: {details.email}</p>
-          <p>Description: {details.description}</p>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 *:px-6 *:py-4 *:border *:flex *:items-center *:justify-between">
+          <p>
+            <span>Name:</span>
+            <span className="text-2xl">{details.name}</span>
+          </p>
+          <p>
+            <span>Category:</span>
+            <Badge variant="default" className="px-4 py-3.5 text-base">
+              {details.category}
+            </Badge>
+          </p>
+          <p>
+            <span>Price:</span>
+            <span className="text-2xl underline underline-offset-8 decoration-1 decoration-primary">
+              ${details.price}
+            </span>
+          </p>
+          <p>
+            <span>Location:</span>
+            <span className="text-2xl">{details.location}</span>
+          </p>
+          <p>
+            <span>Pickup Date:</span>
+            <span className="text-sm lg:text-base">
+              {formatDate(details.pickup_date)}
+            </span>
+          </p>
+          <p>
+            <span>Email:</span>
+            <span className="text-sm lg:text-base">{details.email}</span>
+          </p>
         </div>
+
+        <p className="w-full text-sm lg:text-base border lg:border-2 border-dashed px-3 py-2.5 flex flex-col gap-1">
+          <span>Description:</span>
+          <span className="text-muted-foreground">
+            {details.description || (
+              <span className="flex items-center gap-2">
+                <TriangleAlert className="size-5" /> No Description
+              </span>
+            )}
+          </span>
+        </p>
 
         <Button
           size="lg"
-          variant="outline"
-          className="absolute right-0 rounded-full px-4"
+          className="lg:absolute lg:right-8 px-4 w-full lg:w-auto"
           onClick={() => setOrderDialogueStatus(true)}
         >
           <ShoppingCart />
-          Order
+          <span>Order</span>
         </Button>
       </div>
 
       {/* Invisbel content */}
       <Dialog open={orderDialogueStatus} onOpenChange={setOrderDialogueStatus}>
-        <DialogContent className="sm:max-w-lg border-4">
+        <DialogContent className="sm:max-w-lg border-2">
           <DialogHeader>
             <DialogTitle>Order Form</DialogTitle>
             <DialogDescription>
@@ -142,7 +182,7 @@ const DetailsPage = () => {
           </DialogHeader>
 
           <form
-            className="w-full max-w-lg no-scrollbar max-h-[70svh] overflow-y-auto px-4"
+            className="w-full max-w-lg no-scrollbar max-h-[70svh] overflow-y-auto lg:px-4"
             onSubmit={(e) => handleOrder(e)}
           >
             <FieldGroup>
