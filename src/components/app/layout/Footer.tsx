@@ -7,7 +7,7 @@ const Footer = () => {
 
   return (
     <div className="flex flex-col items-center py-4 border-t">
-      <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-stretchy text-center leading-28">
+      <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-stretchy text-center">
         {footer_text ? footer_text : "Footer"}
       </h3>
     </div>
