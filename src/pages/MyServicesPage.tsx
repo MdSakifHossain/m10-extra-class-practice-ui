@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PenLine, Trash2 } from "lucide-react";
+import { Eye, PenLine, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 import { notify } from "@/lib/notify";
 import { useAppConfig } from "@/contexts/appConfig/AppConfigProvider";
@@ -132,6 +132,16 @@ const MyServicesPage = () => {
               <TableCell className="capitalize">{service.category}</TableCell>
               <TableCell>{service.price}</TableCell>
               <TableCell className="flex items-center justify-end gap-4">
+                <Link to={`/details/${service._id}`}>
+                  <Button
+                    className="flex items-center justify-center gap-2 px-4"
+                    size="icon"
+                    variant="outline"
+                  >
+                    <Eye className="size-4" />
+                    {/* View */}
+                  </Button>
+                </Link>
                 <Link to={`/update-service/${service._id}`}>
                   <Button
                     className="flex items-center justify-center gap-2 px-4"
