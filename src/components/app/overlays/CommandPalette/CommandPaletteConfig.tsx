@@ -84,13 +84,6 @@ export const createCommandPaletteConfig = ({
     ],
     actions: [
       {
-        label: "Reset",
-        icon: RotateCcw,
-        shortcut: "",
-        hidden: true,
-        action: () => runCommand(commands.resetDatabase),
-      },
-      {
         label: "Dark Mode",
         icon: Contrast,
         shortcut: "",
@@ -131,6 +124,15 @@ export const createCommandPaletteConfig = ({
         shortcut: "",
         hidden: true,
         action: () => runCommand(commands.logout),
+      },
+    ],
+    developer: [
+      {
+        label: "Reset Database",
+        icon: RotateCcw,
+        shortcut: "",
+        hidden: true,
+        action: () => runCommand(commands.resetDatabase),
       },
     ],
   };
