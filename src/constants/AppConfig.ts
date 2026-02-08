@@ -6,7 +6,7 @@ export const AppConfig = {
     popular_items_limit: 8,
   },
   fallbacks: {
-    defaultTheme: "dark", // "dark" || "light"
+    defaultTheme: "light", // "dark" || "light"
     defaultCursor: false, // true || false
     defaultCpIcon: "/cpi/cpi13.svg",
   },
