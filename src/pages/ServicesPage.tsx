@@ -22,7 +22,7 @@ const ServicesPage = () => {
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `http://localhost:3000/services?category=${category}`,
+          `${import.meta.env.VITE_API_BASE_URL}/services?category=${category}`,
         );
         setServices(data.data || []);
       } catch (err) {
@@ -39,7 +39,9 @@ const ServicesPage = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/services");
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/services`,
+        );
         setServices(data.data || []);
         setError(null);
       } catch (err) {

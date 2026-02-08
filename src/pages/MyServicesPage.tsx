@@ -31,7 +31,7 @@ const MyServicesPage = () => {
     if (!id) return console.error(`id doesn't exists`);
 
     try {
-      await axios.delete(`http://localhost:3000/services/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/services/${id}`);
       notify.success({ title: "Service Deleted Successfully" });
     } catch (err) {
       console.error(err);
@@ -43,7 +43,7 @@ const MyServicesPage = () => {
     const doTheThing = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/services?email=${user?.email}`,
+          `${import.meta.env.VITE_API_BASE_URL}/services?email=${user?.email}`,
         );
         setMyServices(data.data || []);
         setError(null);

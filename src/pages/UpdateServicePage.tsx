@@ -55,7 +55,7 @@ const UpdateServicePage = () => {
 
     try {
       const { data: res } = await axios.put(
-        `http://localhost:3000/update/${params.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/update/${params.id}`,
         formData,
       );
       // console.log(res);
@@ -77,7 +77,7 @@ const UpdateServicePage = () => {
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `http://localhost:3000/services/${params.id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/services/${params.id}`,
         );
         setService(data);
         setCategory(data.category);

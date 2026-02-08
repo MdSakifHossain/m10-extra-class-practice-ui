@@ -61,7 +61,7 @@ const DetailsPage = () => {
     // api call
     try {
       const { data: apiRes } = await axios.post(
-        "http://localhost:3000/orders",
+        `${import.meta.env.VITE_API_BASE_URL}/orders`,
         formData,
       );
       setOrderDialogueStatus(false);
@@ -82,7 +82,7 @@ const DetailsPage = () => {
     const doTheTHing = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/services/${productID}`,
+          `${import.meta.env.VITE_API_BASE_URL}/services/${productID}`,
         );
         setDetails(data);
       } catch (err) {

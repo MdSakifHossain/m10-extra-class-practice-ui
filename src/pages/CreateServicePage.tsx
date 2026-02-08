@@ -52,7 +52,7 @@ const CreateServicePage = () => {
     try {
       setLoading(true);
       const { data: res } = await axios.post(
-        `http://localhost:3000/services`,
+        `${import.meta.env.VITE_API_BASE_URL}/services`,
         formData,
       );
       // console.log(res);

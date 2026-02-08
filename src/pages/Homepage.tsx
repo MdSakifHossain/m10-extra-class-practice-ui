@@ -17,7 +17,9 @@ const Homepage = () => {
   useEffect(() => {
     const doTheThing = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/services");
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/services`,
+        );
         setPopularServices(data.data || []);
         setError(null);
       } catch (err) {

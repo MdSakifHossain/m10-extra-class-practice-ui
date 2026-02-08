@@ -36,7 +36,7 @@ export const createCommandActions = ({
         action: async () => {
           try {
             const { data: dbRes } = await axios.post(
-              "http://localhost:3000/reset",
+              `${import.meta.env.VITE_API_BASE_URL}/reset`,
               default_services,
             );
             notify.success({ title: dbRes.message });

@@ -34,7 +34,7 @@ const MyOrdersPage = () => {
     const doTheThing = async () => {
       try {
         const { data: apiRes } = await axios.get(
-          `http://localhost:3000/orders?email=${user.email}`,
+          `${import.meta.env.VITE_API_BASE_URL}/orders?email=${user.email}`,
         );
         setMyOrders(apiRes.data);
       } catch (err) {
