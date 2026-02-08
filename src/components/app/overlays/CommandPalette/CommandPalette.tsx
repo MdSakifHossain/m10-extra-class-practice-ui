@@ -174,24 +174,26 @@ const CommandPalette = () => {
               ))}
             </CommandGroup>
 
-            <CommandSeparator />
-
             {import.meta.env.DEV && (
-              <CommandGroup heading="Developer Options">
-                {filterCommands(commandPaletteObj.developer).map(
-                  (item, index) => (
-                    <CommandItem key={index} onSelect={item.action}>
-                      <item.icon />
-                      <span>{item.label}</span>
-                      {item.shortcut && (
-                        <CommandShortcut>
-                          <Kbd>{item.shortcut}</Kbd>
-                        </CommandShortcut>
-                      )}
-                    </CommandItem>
-                  ),
-                )}
-              </CommandGroup>
+              <>
+                <CommandSeparator />
+
+                <CommandGroup heading="Developer Options">
+                  {filterCommands(commandPaletteObj.developer).map(
+                    (item, index) => (
+                      <CommandItem key={index} onSelect={item.action}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                        {item.shortcut && (
+                          <CommandShortcut>
+                            <Kbd>{item.shortcut}</Kbd>
+                          </CommandShortcut>
+                        )}
+                      </CommandItem>
+                    ),
+                  )}
+                </CommandGroup>
+              </>
             )}
           </CommandList>
         </Command>
